@@ -8,6 +8,15 @@ https://eclass.upatras.gr/modules/document/file.php/CEID1162/Projects-2024-2025/
 <br>
 <br>
 
+
+<h2>Οδηγίες</h2>
+-Dataset (ΑΠΛΟΠΟΙΗΜΕΝΟ): https://www.kaggle.com/datasets/schmoyote/coffee-reviews-dataset
+-Επιλογή Branch και Δημιουργία φακέλου με όνομα, το όνομα του αλγορίθμου (e.g. LSH)
+
+
+<h2>Ανάθεση</h2>
+Θεόφραστος: LSH
+
 <h2>Languages and Utilities Used</h2>
 
 - <b>Python</b> 
