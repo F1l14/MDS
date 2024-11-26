@@ -14,7 +14,7 @@ https://eclass.upatras.gr/modules/document/file.php/CEID1162/Projects-2024-2025/
 
 <br>
 <br>
-<h2>Optional Libraries We Can Use</h2>
+<h2>Optional Python Libraries</h2>
 
 - <b>pandas</b>
 Για χειρισμό δεδομένων, όπως φόρτωση, καθαρισμός, φιλτράρισμα και επεξεργασία πινάκων δεδομένων (DataFrames).
