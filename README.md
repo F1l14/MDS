@@ -24,7 +24,7 @@ Babis: Range Trees  <br>
 <h2>Languages and Utilities Used</h2>
 
 - <b>Python</b> 
-
+- <b>Jupyter Notebook</b>
 <br>
 <br>
 <h2>Optional Python Libraries</h2>
