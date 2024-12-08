@@ -24,9 +24,8 @@ Sort by x:
 <br>
 Median Point: (5.0, 94, 2019, 1).
 <br>
-
+<br>
 Tree so far:
-
 {
     point: (5.0, 94, 2019, 1),
     left: [...],
