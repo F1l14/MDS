@@ -8,9 +8,11 @@ Check if the code can be simpler
 Step 1: Build the Tree  <br>
 The range tree is built by recursively splitting the points along the dimensions 
 x, y, z, and w, cycling through the dimensions as depth increases.
+<br>
+<br>
 
 At depth 0 (split by x):
-
+<br>
 Sort by x:
 
 [(4.5, 95, 2020, 1),
@@ -19,7 +21,9 @@ Sort by x:
 (6.0, 96, 2021, 2),
 (7.0, 98, 2021, 1)]
 
+<br>
 Median Point: (5.0, 94, 2019, 1).
+<br>
 
 Tree so far:
 
@@ -29,18 +33,19 @@ Tree so far:
     right: [...]
 }
 
-
+<br>
+<br>
 At depth 1 (split by y):
-
+<br>
 Left Subtree:
 Points: [(4.5, 95, 2020, 1), (4.8, 97, 2020, 3)].
 Median Point: (4.8, 97, 2020, 3).
-
+<br>
 Right Subtree:
 Points: [(6.0, 96, 2021, 2), (7.0, 98, 2021, 1)].
 Median Point: (6.0, 96, 2021, 2).
 
-
+<br>
 Tree structure:
 {
     point: (5.0, 94, 2019, 1),
