@@ -48,6 +48,7 @@ Median Point: (6.0, 96, 2021, 2).                   <br>
   
 <br>
 Tree structure:
+```python
 {
     point: (5.0, 94, 2019, 1),
     left: {
@@ -61,6 +62,7 @@ Tree structure:
         right: ...
     }
 }
+
 
 
 This process continues until all points are placed into leaf nodes.
