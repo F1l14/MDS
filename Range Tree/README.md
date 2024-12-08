@@ -3,7 +3,7 @@
 Check if the code can be simpler
 
 
-# How it works: <br>
+# How the rangeTree.py works: <br>
 ----------------------------------------------------------------------------------------------------------------------------
 Step 1: Build the Tree  <br>
 The range tree is built by recursively splitting the points along the dimensions 
