@@ -48,20 +48,21 @@ Median Point: (6.0, 96, 2021, 2).                   <br>
   
 <br>
 Tree structure:
-```python
+```plaintext
 {
-    point: (5.0, 94, 2019, 1),
-    left: {
-        point: (4.8, 97, 2020, 3),
-        left: ...,
-        right: ...
-    },
-    right: {
-        point: (6.0, 96, 2021, 2),
-        left: ...,
-        right: ...
-    }
+	point: (5.0, 94, 2019, 1),
+	left: {
+		point: (4.8, 97, 2020, 3),
+		left: ...,
+		right: ...
+	},
+	right: {
+		point: (6.0, 96, 2021, 2),
+		left: ...,
+		right: ...
+	}
 }
+
 
 
 
