@@ -71,52 +71,53 @@ This process continues until all points are placed into leaf nodes.
 ---------------------------------------------------------------------------------------------------------------------------------------------------
 
 
-Step 2: Query Execution
+Step 2: Query Execution <br>
+<br>
+<br>
 
+Initialization: <br>
+Start at the root node (5.0, 94, 2019, 1). <br>
+Query range is x ∈ [4.0,6.0], y ∈ [94,96], z ∈ [2019,2021], w ∈ [1,2].   <br>
 
-Initialization:
-Start at the root node (5.0, 94, 2019, 1).
-Query range is x ∈ [4.0,6.0], y ∈ [94,96], z ∈ [2019,2021], w ∈ [1,2].
-
-
+<br><br> <br>
 At depth 0 (split by x):
-
+<br>
 Current node: (5.0, 94, 2019, 1).
-
+<br>
 Check if point is within the range:
-
-5.0 ∈ [4.0,6.0]:    True
-94 ∈ [94,96]:       True
-2019 ∈ [2019,2021]: True
-1 ∈ [1,2]:          True
-Point is in range, add it to results: [(5.0, 94, 2019, 1)].
-
-Traverse left because 4.0 ≤ 5.0.
+<br>
+5.0 ∈ [4.0,6.0]:    True      <br>
+94 ∈ [94,96]:       True      <br>
+2019 ∈ [2019,2021]: True      <br>
+1 ∈ [1,2]:          True      <br>
+Point is in range, add it to results: [(5.0, 94, 2019, 1)].    <br>
+ <br> <br>
+Traverse left because 4.0 ≤ 5.0.    <br>
 Traverse right as well because 6.0 ≥ 5.0.
 
-
+ <br> <br> <br>
 
 At depth 1 (split by y):
-
-Left Subtree:
-Current node: (4.8, 97, 2020, 3).
-Check if point is within the range:
-4.8∈[4.0,6.0]: True
-97∈[94,96]:    False
-Point is out of range, do not add to results.
-
+ <br>
+Left Subtree: <br>
+Current node: (4.8, 97, 2020, 3). <br>
+Check if point is within the range: <br>
+4.8∈[4.0,6.0]: True    <br>
+97∈[94,96]:    False    <br>
+Point is out of range, do not add to results.  <br>
+ <br>
 Traverse left and right subtrees of (4.8, 97, 2020, 3) --> but both are None.
+ <br> <br>
 
-
-Right Subtree:
-Current node: (6.0, 96, 2021, 2).
-Check if point is within the range:
-6.0∈[4.0,6.0]:    True
-96 ∈ [94,96]:     True
-2021∈[2019,2021]: True
-2 ∈ [1,2]:        True
-Point is in range, add to results: [(5.0, 94, 2019, 1), (6.0, 96, 2021, 2)].
-
+Right Subtree: <br>
+Current node: (6.0, 96, 2021, 2).     <br>
+Check if point is within the range:    <br>
+6.0∈[4.0,6.0]:    True       <br>
+96 ∈ [94,96]:     True       <br>
+2021∈[2019,2021]: True       <br>
+2 ∈ [1,2]:        True       <br>
+Point is in range, add to results: [(5.0, 94, 2019, 1), (6.0, 96, 2021, 2)].     <br>
+ <br> <br> <br>
 
 Final Results
 After exploring all relevant subtrees, the points within the range are:
