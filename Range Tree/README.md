@@ -34,6 +34,8 @@ Tree so far:
 
 <br>
 <br>
+<br>
+<br>
 At depth 1 (split by y): <br>
 <br>
 Left Subtree: <br>
