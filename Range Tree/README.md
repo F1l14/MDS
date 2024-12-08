@@ -48,7 +48,8 @@ Median Point: (6.0, 96, 2021, 2).                   <br>
   
 <br>
 Tree structure:
-```plaintext
+```markdown
+<pre>
 {
 	point: (5.0, 94, 2019, 1),
 	left: {
@@ -62,7 +63,7 @@ Tree structure:
 		right: ...
 	}
 }
-
+</pre>
 
 
 
