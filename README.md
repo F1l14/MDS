@@ -15,8 +15,9 @@ Project: Implementation and Experimental Evaluation of Multidimensional Data Str
 
 
 <h2>Ανάθεση</h2>
-Θεόφραστος: LSH
-Βασίλης: k-d
+Θεόφραστος: LSH<br>
+Βασίλης: k-d<br>
+Κωνσταντίνος: Quadtree<br>
 
 <h2>Languages and Utilities Used</h2>
 
