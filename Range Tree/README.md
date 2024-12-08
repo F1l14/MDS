@@ -5,7 +5,7 @@ Check if the code can be simpler
 
 # How it works: <br>
 ----------------------------------------------------------------------------------------------------------------------------
-Step 1: Build the Tree
+Step 1: Build the Tree  <br>
 The range tree is built by recursively splitting the points along the dimensions 
 x, y, z, and w, cycling through the dimensions as depth increases.
 
