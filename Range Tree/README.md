@@ -35,16 +35,16 @@ Tree so far:
 
 <br>
 <br>
-At depth 1 (split by y):
+At depth 1 (split by y): <br>
 <br>
 Left Subtree:
-Points: [(4.5, 95, 2020, 1), (4.8, 97, 2020, 3)].
-Median Point: (4.8, 97, 2020, 3).
+Points: [(4.5, 95, 2020, 1), (4.8, 97, 2020, 3)].   <br>
+Median Point: (4.8, 97, 2020, 3).                   <br>
 <br>
-Right Subtree:
-Points: [(6.0, 96, 2021, 2), (7.0, 98, 2021, 1)].
-Median Point: (6.0, 96, 2021, 2).
-
+Right Subtree: <br>
+Points: [(6.0, 96, 2021, 2), (7.0, 98, 2021, 1)].   <br>
+Median Point: (6.0, 96, 2021, 2).                   <br>
+  
 <br>
 Tree structure:
 {
