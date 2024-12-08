@@ -37,7 +37,7 @@ Tree so far:
 <br>
 At depth 1 (split by y): <br>
 <br>
-Left Subtree:
+Left Subtree: <br>
 Points: [(4.5, 95, 2020, 1), (4.8, 97, 2020, 3)].   <br>
 Median Point: (4.8, 97, 2020, 3).                   <br>
 <br>
