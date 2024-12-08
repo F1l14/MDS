@@ -102,8 +102,8 @@ At depth 1 (split by y):
 Left Subtree: <br>
 Current node: (4.8, 97, 2020, 3). <br>
 Check if point is within the range: <br>
-4.8∈[4.0,6.0]: True    <br>
-97∈[94,96]:    False    <br>
+4.8 ∈ [4.0,6.0]: True    <br>
+97 ∈ [94,96]:    False    <br>
 Point is out of range, do not add to results.  <br>
  <br>
 Traverse left and right subtrees of (4.8, 97, 2020, 3) --> but both are None.
@@ -112,9 +112,9 @@ Traverse left and right subtrees of (4.8, 97, 2020, 3) --> but both are None.
 Right Subtree: <br>
 Current node: (6.0, 96, 2021, 2).     <br>
 Check if point is within the range:    <br>
-6.0∈[4.0,6.0]:    True       <br>
+6.0 ∈ [4.0,6.0]:    True       <br>
 96 ∈ [94,96]:     True       <br>
-2021∈[2019,2021]: True       <br>
+2021 ∈ [2019,2021]: True       <br>
 2 ∈ [1,2]:        True       <br>
 Point is in range, add to results: [(5.0, 94, 2019, 1), (6.0, 96, 2021, 2)].     <br>
  <br> <br> <br>
