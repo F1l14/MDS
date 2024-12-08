@@ -119,6 +119,6 @@ Check if point is within the range:    <br>
 Point is in range, add to results: [(5.0, 94, 2019, 1), (6.0, 96, 2021, 2)].     <br>
  <br> <br> <br>
 
-Final Results
-After exploring all relevant subtrees, the points within the range are:
-[(5.0, 94, 2019, 1), (6.0, 96, 2021, 2)]       These are printed as the final output.
+Final Results  <br>
+After exploring all relevant subtrees, the points within the range are:  <br>
+[(5.0, 94, 2019, 1), (6.0, 96, 2021, 2)]       These are printed as the final output. <br>
