@@ -16,6 +16,10 @@ https://eclass.upatras.gr/modules/document/file.php/CEID1162/Projects-2024-2025/
 
 <h2>Ανάθεση</h2>
 Θεόφραστος: LSH
+Dean: Quadtrees
+Fillipos: R-trees
+Vasilis: KD-trees
+Babis: Range Trees
 
 <h2>Languages and Utilities Used</h2>
 
