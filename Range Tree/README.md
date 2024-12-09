@@ -1,6 +1,6 @@
 # Tasks:  <br>
 
-Check if you can use Tsakalidis algorithm to turn the Range Tree into leaf-oriented --> το δοκίμασα και εισάγει Overhead οπότε το εγκατέλειψα.
+Check if you can use Tsakalidis algorithm to turn the Range Tree into leaf-oriented --> το δοκίμασα και εισάγει overhead οπότε το εγκατέλειψα.
 
 
 # How the rangeTree.py works: <br>
