@@ -1,6 +1,6 @@
 # Tasks:  <br>
 
-Check if the code can be simpler
+Check if you can use Tsakalidis algorithm to turn the tree to leaf-oriented.
 
 
 # How the rangeTree.py works: <br>
