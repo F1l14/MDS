@@ -11,17 +11,9 @@ class TreeNode:
         self.right = None
 
 
-class LinkedListNode:
-    def __init__(self, key=None):
-        self.key = key
-        self.next = None
-
-
 class BinarySearchTree:
     def __init__(self):
         self.root = None     # root node
-        self.head = None     # Head of the linked list
-        self.current = None  # Pointer to the current node in the linked list
 
     def insert(self, x):
         if self.root is None:
