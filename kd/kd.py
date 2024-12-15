@@ -1,3 +1,5 @@
+import pandas as pd
+
 class KDTreeNode:
     """A node in the KD-tree."""
     def __init__(self, point, left=None, right=None):
@@ -8,6 +10,11 @@ class KDTreeNode:
 def build_kdtree(df, columns_to_index, depth=0):
     if len(df) == 0:
         return None
+    
+    if "review_date" in columns_to_index:
+        if 'review_date_comp' not in df.columns:
+            df['review_date_comp'] = pd.to_datetime(df['review_date'], format='%B %Y').dt.strftime('%Y%m').astype(int)
+            columns_to_index[columns_to_index.index('review_date')] = "review_date_comp"
 
     # Determine the axis (column index) based on the depth
     axis = depth % len(columns_to_index)
