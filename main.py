@@ -8,7 +8,7 @@ from kd import *
 
 import pandas as pd
 
-file = "Data/ultra_simplified_coffee.csv"
+file = "Data/simplified_coffee.csv"
 
 df = pd.read_csv(file)
 
