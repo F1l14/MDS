@@ -3,8 +3,7 @@ import os
 
 sys.path.append(os.path.join(os.path.dirname(__file__), 'kd'))
 
-from kd import build_kdtree
-from kd import print_kdtree
+from kd import *
 
 
 import pandas as pd
