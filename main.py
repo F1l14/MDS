@@ -28,4 +28,6 @@ columns_to_index = ['rating', '100g_USD', 'review_date_comp']
 # Build the KDTree
 root = build_kdtree(df, columns_to_index)
 
-print_kdtree(root)
+# print_kdtree(root)
+
+print(validate_kdtree(root, columns_to_index))

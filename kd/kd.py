@@ -35,3 +35,52 @@ def print_kdtree(node, depth=0):
     print(f"{indent}Depth {depth}: {node.point[['rating', '100g_USD', 'review_date']].tolist()}")
     print_kdtree(node.left, depth + 1)
     print_kdtree(node.right, depth + 1)
+
+def validate_kdtree(node, columns_to_index, depth=0, min_bounds=None, max_bounds=None):
+    """Validates if the given tree is a proper KD-tree."""
+    if node is None:
+        return True
+
+    # Determine the axis (column index) based on the depth
+    axis = depth % len(columns_to_index)
+    column = columns_to_index[axis]
+
+    # Get the current point's value for the splitting axis
+    point_value = node.point[column]
+
+    # Initialize bounds if they are None
+    if min_bounds is None:
+        min_bounds = [None] * len(columns_to_index)
+    if max_bounds is None:
+        max_bounds = [None] * len(columns_to_index)
+
+    # Debugging output for current state
+    # print(f"Depth {depth}: Validating node with point {node.point[['rating', '100g_USD', 'review_date_comp']].tolist()}")
+    # print(f"    Axis {axis} - Column: '{column}', Point Value: {point_value}")
+    # print(f"    Current min_bounds: {min_bounds}")
+    # print(f"    Current max_bounds: {max_bounds}")
+
+    # Check bounds for the current node
+    if min_bounds[axis] is not None and point_value < min_bounds[axis]:
+        print(f"    Validation failed: Point {point_value} < min_bounds[{axis}] {min_bounds[axis]}")
+        return False
+    if max_bounds[axis] is not None and point_value > max_bounds[axis]:
+        print(f"    Validation failed: Point {point_value} > max_bounds[{axis}] {max_bounds[axis]}")
+        return False
+
+    # Set new min and max bounds for the next level
+    new_min_bounds = min_bounds.copy()
+    new_max_bounds = max_bounds.copy()
+    
+    new_min_bounds[axis] = point_value
+    new_max_bounds[axis] = point_value
+
+    # Debugging output for new bounds
+    # print(f"    Updated min_bounds for next level: {new_min_bounds}")
+    # print(f"    Updated max_bounds for next level: {new_max_bounds}")
+
+    # Validate left and right subtrees with updated bounds
+    left_valid = validate_kdtree(node.left, columns_to_index, depth + 1, min_bounds, new_max_bounds)
+    right_valid = validate_kdtree(node.right, columns_to_index, depth + 1, new_min_bounds, max_bounds)
+
+    return left_valid and right_valid
