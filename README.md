@@ -26,8 +26,7 @@ https://eclass.upatras.gr/modules/document/file.php/CEID1162/Projects-2024-2025/
 
 <h2>Πως δουλέυει (Συνοπτικά) </h2>
 
-1)
-Κάνε include τα παρακάτω (υπάρχουν και στον κώδικα): 
+1)Κάνε include τα παρακάτω (υπάρχουν και στον κώδικα): 
 import pandas as pd
 import re, hashlib, math, time
 from random import randint, seed
