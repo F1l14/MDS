@@ -25,9 +25,6 @@ https://eclass.upatras.gr/modules/document/file.php/CEID1162/Projects-2024-2025/
 <br>
 
 <h2>Πως δουλέυει (Συνοπτικά) </h2>
-1)blyat
-
-
 
 1)Κάνε include τα παρακάτω (υπάρχουν και στον κώδικα): 
 import pandas as pd
