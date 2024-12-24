@@ -12,7 +12,5 @@ def date_to_number(date_str):
     # Get the numeric month from the mapping
     numeric_month = month_mapping.get(month_name)
     
-    # Return the formatted four-digit number
+    # Return the formatted number
     return int(year + numeric_month)
-
-print(date_to_number("January 2012"))  # 201201
