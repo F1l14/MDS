@@ -16,9 +16,10 @@ Project: Implementation and Experimental Evaluation of Multidimensional Data Str
 
 <h2>Ανάθεση</h2>
 Θεόφραστος: LSH<br>
-Βασίλης: k-d<br>
+Βασίλης: K-d<br>
 Κωνσταντίνος: Quadtree<br>
-Μπάμπης: Range Trees<br>
+Μπάμπης: Range Tree<br>
+Φίλιππος: R-Tree<br>
 
 <h2>Languages and Utilities Used</h2>
 
