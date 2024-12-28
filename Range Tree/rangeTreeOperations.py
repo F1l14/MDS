@@ -1,8 +1,8 @@
-class RangeTree4D:
+class RangeTree3D:
     def __init__(self, points):
         """
-        Initializes the 4D range tree.
-        points: A list of points where each point is a tuple (x, y, z, w).
+        Initializes the 3D range tree.
+        points: A list of points where each point is a tuple (x, y, z).
         """
         self.tree = self.build_tree(points)
     
@@ -15,7 +15,7 @@ class RangeTree4D:
         if not points:
             return None
         
-        axis = depth % 4
+        axis = depth % 3
         points.sort(key=lambda p: p[axis])
         mid = len(points) // 2
         median_point = points[mid]
@@ -30,15 +30,15 @@ class RangeTree4D:
         """
         Performs a range query on the tree.
         node: Current node in the tree.
-        query_range: List of ranges [(x_min, x_max), (y_min, y_max), (z_min, z_max), (w_min, w_max)].
+        query_range: List of ranges [(x_min, x_max), (y_min, y_max), (z_min, z_max)].
         depth: Current depth in the tree.
         """
         if not node:
             return []
         
-        axis = depth % 4
+        axis = depth % 3
         point = node['point']
-        in_range = all(query_range[i][0] <= point[i] <= query_range[i][1] for i in range(4))
+        in_range = all(query_range[i][0] <= point[i] <= query_range[i][1] for i in range(3))
         result = [point] if in_range else []
         
         if query_range[axis][0] <= point[axis]:
@@ -51,13 +51,13 @@ class RangeTree4D:
     def insert(self, point):
         """
         Inserts a new point into the range tree.
-        point: A tuple (x, y, z, w) representing the new point.
+        point: A tuple (x, y, z) representing the new point.
         """
         def insert_recursive(node, depth):
             if not node:
                 return {'point': point, 'left': None, 'right': None}
             
-            axis = depth % 4
+            axis = depth % 3
             if point[axis] <= node['point'][axis]:
                 node['left'] = insert_recursive(node['left'], depth + 1)
             else:
@@ -69,13 +69,13 @@ class RangeTree4D:
     def delete(self, point):
         """
         Deletes a point from the range tree.
-        point: A tuple (x, y, z, w) representing the point to delete.
+        point: A tuple (x, y, z) representing the point to delete.
         """
         def find_min(node, axis, depth):
             if not node:
                 return None
             
-            current_axis = depth % 4
+            current_axis = depth % 3
             if current_axis == axis:
                 if not node['left']:
                     return node
@@ -90,7 +90,7 @@ class RangeTree4D:
             if not node:
                 return None
             
-            axis = depth % 4
+            axis = depth % 3
             if node['point'] == point:
                 if node['right']:
                     min_node = find_min(node['right'], axis, depth + 1)
@@ -116,8 +116,6 @@ class RangeTree4D:
         """
         self.delete(old_point)
         self.insert(new_point)
-
-
 
 
 
