@@ -117,6 +117,13 @@ class RangeTree4D:
         self.delete(old_point)
         self.insert(new_point)
 
+
+
+
+
+
+
+/*
 # Example Usage
 if __name__ == "__main__":
     points = [
@@ -142,3 +149,4 @@ if __name__ == "__main__":
     query_range = [(4.0, 6.0), (94, 96), (2019, 2021), (1, 2)]
     results = tree.range_query(tree.tree, query_range)
     print("Points within range:", results)
+*/
