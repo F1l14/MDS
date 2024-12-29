@@ -6,10 +6,10 @@ from lsh import shingler, minhashSigner, lsh  # Import the required classes
 df = pd.read_csv('archive/simplified_coffee.csv')
 
 # Initialize Parameters
-k = 5  # Shingle length
-sig_size = 100  # Number of hash functions
-bands_nr = 10  # Number of bands
-threshold = 0.5  # Similarity threshold
+k = 3  # Shingle length
+sig_size = 50  # Number of hash functions
+bands_nr = 20  # Number of bands
+threshold = 0.3  # Similarity threshold
 
 
 # Start the timer
