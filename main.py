@@ -111,7 +111,7 @@ for _, row in query_df.iterrows():
 dataset = pd.read_csv("archive/query_output.csv")
 
 # Delete the file
-os.remove("archive/query_output.csv")
+#os.remove("archive/query_output.csv")
 
 run_lsh = input("Would you like to run the LSH phase of the query? (no for exit): ")
 if run_lsh.lower() == "no":
