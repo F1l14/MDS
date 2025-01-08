@@ -1,0 +1,3 @@
+-review_date
+-rating
+-100g_USD
