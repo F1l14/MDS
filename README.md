@@ -13,6 +13,10 @@ https://eclass.upatras.gr/modules/document/file.php/CEID1162/Projects-2024-2025/
 -Dataset (ΑΠΛΟΠΟΙΗΜΕΝΟ): https://www.kaggle.com/datasets/schmoyote/coffee-reviews-dataset
 -Επιλογή Branch και Δημιουργία φακέλου με όνομα, το όνομα του αλγορίθμου (e.g. LSH)
 
+<h2>Σύνδεσμος για αναφορά σε Word</h2>
+
+[Report](https://upatrasgr-my.sharepoint.com/:w:/g/personal/up1093320_upatras_gr/Eegz3zUs1IJAug4rmj4QCmABn8NbnoZ1Bl6TiVGnB3Vb7w?e=Tx6xuL) <br>
+
 
 <h2>Ανάθεση</h2>
 Θεόφραστος: LSH  <br>
