@@ -43,7 +43,7 @@ class RangeTree3D:
         
         if query_range[axis][0] <= point[axis]:
             result += self.range_query(node['left'], query_range, depth + 1)
-        if query_range[axis][1] >= point[axis]:
+        if query_range[axis][1] > point[axis]:
             result += self.range_query(node['right'], query_range, depth + 1)
         
         return result
