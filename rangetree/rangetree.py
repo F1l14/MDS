@@ -116,35 +116,3 @@ class RangeTree3D:
         """
         self.delete(old_point)
         self.insert(new_point)
-
-
-
-
-
-'''
-# Example Usage
-if __name__ == "__main__":
-    points = [
-        (4.5, 95, 2020, 1), 
-        (6.0, 96, 2021, 2), 
-        (5.0, 94, 2019, 1), 
-        (4.8, 97, 2020, 3),
-        (7.0, 98, 2021, 1)
-    ]
-    
-    tree = RangeTree4D(points)
-    
-    # Insert a new point
-    tree.insert((5.5, 96, 2020, 2))
-    
-    # Delete an existing point
-    tree.delete((4.8, 97, 2020, 3))
-    
-    # Update an existing point
-    tree.update((5.0, 94, 2019, 1), (4.9, 95, 2019, 1))
-    
-    # Perform a range query
-    query_range = [(4.0, 6.0), (94, 96), (2019, 2021), (1, 2)]
-    results = tree.range_query(tree.tree, query_range)
-    print("Points within range:", results)
-'''
