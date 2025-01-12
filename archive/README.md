@@ -5,10 +5,10 @@ Time taken for preprocessing: 0.00800180435180664 seconds.
 
 Time taken for range tree construction: 0.20891261100769043 seconds.
 
-Review Date: min = 201711, max = 202211
-Rating: min = 84, max = 97
-100g USD: min = 0.17, max = 132.28.
-
+Review Date: min = 201711, max = 202211             <br>
+Rating: min = 84, max = 97                          <br>
+100g USD: min = 0.17, max = 132.28.                 <br>
+ 
 <br>
 
 Define the box for the range query:                     <br>
