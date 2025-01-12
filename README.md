@@ -13,6 +13,8 @@ Project: Implementation and Experimental Evaluation of Multidimensional Data Str
 -Dataset (ΑΠΛΟΠΟΙΗΜΕΝΟ): https://www.kaggle.com/datasets/schmoyote/coffee-reviews-dataset <br>
 -Επιλογή Branch και Δημιουργία φακέλου με όνομα, το όνομα του αλγορίθμου (e.g. LSH) <br>
 
+[Report](https://upatrasgr-my.sharepoint.com/:w:/g/personal/up1093320_upatras_gr/Eegz3zUs1IJAug4rmj4QCmABn8NbnoZ1Bl6TiVGnB3Vb7w?e=Tx6xuL) <br>
+
 
 <h2>Ανάθεση</h2>
 Θεόφραστος: LSH<br>
