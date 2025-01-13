@@ -25,8 +25,8 @@ class RangeTree3D:
         right_points = [p for p in points if p[axis] > median_point[axis]]
     
         # Include the median point itself in the correct subtree if duplicates exist
-        median_duplicates = [p for p in points if p[axis] == median_point[axis] and p != median_point]
-        right_points.extend(median_duplicates)
+        median_equals = [p for p in points if p[axis] == median_point[axis] and p != median_point]
+        right_points.extend(median_equals)
     
         return {
             'point': median_point,
