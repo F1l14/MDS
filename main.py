@@ -93,10 +93,6 @@ range_query_result = octree.range_query(oct.Point(min_x, min_y, min_z), oct.Poin
 # Stop the timer for the range query
 query_end_time = time.time()
 
-# Calculate the elapsed time for the completion of the query
-elapsed_time_query = query_end_time - query_start_time
-print(f"Time taken for query completion: {elapsed_time_query} seconds.\n")
-
 # Extract the data from the nodes
 query_data = [node.data for node in range_query_result]
 
