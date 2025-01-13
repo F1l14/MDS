@@ -21,7 +21,7 @@ print(f"Time taken for loading: {elapsed_time_load} seconds.\n")
 # Start the timer for preprocessing
 start_time_preprocess = time.time()
 
-# PREPROCCESSING PHASE
+# PREPROCESSING PHASE
 
 # Convert dates into numbers
 dataset['review_date'] = dataset['review_date'].apply(func.date_to_number)
