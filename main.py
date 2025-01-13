@@ -112,6 +112,10 @@ for node in range_query_result:
     print(node.data)
     print("\n")
 
+# Calculate the elapsed time for the completion of the query
+elapsed_time_query = query_end_time - query_start_time
+print(f"Time taken for query completion: {elapsed_time_query} seconds.\n")
+
 # LSH PHASE OF THE QUERY
 
 # Load the dataset
