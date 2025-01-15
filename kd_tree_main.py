@@ -3,7 +3,7 @@ import time
 import os
 import functions.functions as func
 import lsh.lsh as lsh
-from kd import *
+import kd.kd as kd
 
 # Start the timer for loading
 start_time_load = time.time()
@@ -39,7 +39,7 @@ start_time_kdtree = time.time()
 
 # KD-TREE CONSTRUCTION PHASE
 columns_to_index = ['review_date', 'rating', '100g_USD']
-root = build_kdtree(dataset, columns_to_index)
+root = kd.build_kdtree(dataset, columns_to_index)
 
 # Stop the timer for KD-Tree construction
 end_time_kdtree = time.time()
@@ -77,7 +77,7 @@ query_start_time = time.time()
 # Perform the range query
 min_range = [min_x, min_y, min_z]
 max_range = [max_x, max_y, max_z]
-range_query_result = range_search(root, 0, columns_to_index, min_range, max_range)
+range_query_result = kd.range_search(root, 0, columns_to_index, min_range, max_range)
 
 # Stop the timer for the range query
 query_end_time = time.time()
