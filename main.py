@@ -1,8 +1,8 @@
 import os
 
 print("Select which Python file to run:")
-print("1. Octree")
-print("2. KD-Tree")
+print("1. KD-Tree")
+print("2. Octree")
 print("3. Range Search")
 print("4. R-Tree")
 print("5. Exit")
