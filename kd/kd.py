@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 
 class KDTreeNode:
     """A node in the KD-tree."""
@@ -42,6 +43,32 @@ def print_kdtree(node, depth=0):
     print(f"{indent}Depth {depth}: {node.point[['rating', '100g_USD', 'review_date']].tolist()}")
     print_kdtree(node.left, depth + 1)
     print_kdtree(node.right, depth + 1)
+
+def range_search(node, depth, columns_to_index, min_range, max_range):
+    if node is None:
+        return []
+
+    axis = depth % len(columns_to_index)
+    column = columns_to_index[axis]
+    point_value = node.point[column]
+
+    min_range = min_range + [-np.inf] * (len(columns_to_index) - len(min_range))
+    max_range = max_range + [np.inf] * (len(columns_to_index) - len(max_range))
+
+    # Check if the current point is within the range
+    in_range = all(min_range[i] <= node.point[columns_to_index[i]] <= max_range[i] for i in range(len(columns_to_index)))
+
+    results = []
+    if in_range:
+        results.append(node.point)
+
+    # Recursively search the left and right subtrees
+    if min_range[axis] <= point_value:
+        results.extend(range_search(node.left, depth + 1, columns_to_index, min_range, max_range))
+    if max_range[axis] >= point_value:
+        results.extend(range_search(node.right, depth + 1, columns_to_index, min_range, max_range))
+
+    return results
 
 def validate_kdtree(node, columns_to_index, depth=0, min_bounds=None, max_bounds=None):
     """Validates if the given tree is a proper KD-tree."""
