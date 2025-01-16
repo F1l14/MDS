@@ -20,11 +20,11 @@ class RangeTree3D:
         mid = len(points) // 2
         median_point = points[mid]
     
-        # Ensure points with the same value as the median on the current axis are split correctly
+        # Ensure points smaller than the median go to the left subtree and those gretaer than the median to the right subtree
         left_points = [p for p in points if p[axis] < median_point[axis]]
         right_points = [p for p in points if p[axis] > median_point[axis]]
     
-        # Include the median point itself in the correct subtree if duplicates exist
+        # Include points with equal value as the median in the right subtree
         median_equals = [p for p in points if p[axis] == median_point[axis] and p != median_point]
         right_points.extend(median_equals)
     
