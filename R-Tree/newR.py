@@ -29,7 +29,9 @@ def parseCSV(path):
 # parseCSV("coffee_analysis.csv")
 
 # ===========================================================================
-nodeCounter =0
+nodeCounter = 0
+
+
 class Node:
     def __init__(self, isgroup=False, members=None, mbr=None):
         global nodeCounter
@@ -37,6 +39,7 @@ class Node:
         self.name = nodeCounter
         self.isgroup = isgroup
         self.members = members
+        self.maxMembers = 4
         # [ xmin , xmax, ymin, ymax, zmin, zmax ]
         self.mbr = mbr
         self.mbrCalc()
@@ -50,8 +53,32 @@ class Node:
         print("MBR: " + str(self.mbr))
         print("Members:", end="")
         for member in self.members:
-            print(" Node:"+str(member.name) + ", ", end="")
+            print(" Node:" + str(member.name) + ", ", end="")
         print("\n")
+
+    def mbrCalcSingular(self):
+        if self.members is not None:
+            last_member = self.members[-1]
+            # xmin
+            if self.mbr[0] > last_member.mbr[0]:
+                self.mbr[0] = last_member.mbr[0]
+            # xmax
+            if self.mbr[1] < last_member.mbr[1]:
+                self.mbr[1] = last_member.mbr[1]
+
+            # ymin
+            if self.mbr[2] > last_member.mbr[2]:
+                self.mbr[2] = last_member.mbr[2]
+            # ymax
+            if self.mbr[3] < last_member.mbr[3]:
+                self.mbr[3] = last_member.mbr[3]
+
+            # zmin
+            if self.mbr[4] > last_member.mbr[4]:
+                self.mbr[4] = last_member.mbr[4]
+            # zmax
+            if self.mbr[5] < last_member.mbr[5]:
+                self.mbr[5] = last_member.mbr[5]
 
     def mbrCalc(self):
         if not self.mbr:
@@ -70,24 +97,30 @@ class Node:
         # mbr calculation
         for node in self.members:
             # xmin
-            if (self.mbr[0] > node.mbr[0]): self.mbr[0] = node.mbr[0]
+            if self.mbr[0] > node.mbr[0]:
+                self.mbr[0] = node.mbr[0]
             # xmax
-            if (self.mbr[1] < node.mbr[1]): self.mbr[1] = node.mbr[1]
+            if self.mbr[1] < node.mbr[1]:
+                self.mbr[1] = node.mbr[1]
 
             # ymin
-            if (self.mbr[2] > node.mbr[2]): self.mbr[2] = node.mbr[2]
+            if self.mbr[2] > node.mbr[2]:
+                self.mbr[2] = node.mbr[2]
             # ymax
-            if (self.mbr[3] < node.mbr[3]): self.mbr[3] = node.mbr[3]
+            if self.mbr[3] < node.mbr[3]:
+                self.mbr[3] = node.mbr[3]
 
             # zmin
-            if (self.mbr[4] > node.mbr[4]): self.mbr[4] = node.mbr[4]
+            if self.mbr[4] > node.mbr[4]:
+                self.mbr[4] = node.mbr[4]
             # zmax
-            if (self.mbr[5] < node.mbr[5]): self.mbr[5] = node.mbr[5]
+            if self.mbr[5] < node.mbr[5]:
+                self.mbr[5] = node.mbr[5]
 
-
-
-
-
+    def insert(self, newMember):
+        if len(self.members) < self.maxMembers:
+            self.members.append(newMember)
+            self.mbrCalcSingular()
 
 
 def main():
@@ -96,8 +129,10 @@ def main():
 
     root = Node(True, [Node1, Node2], [1, 2, 3, 3, 3, 4])
     root.print()
-    Node1.print()
-    Node2.print()
+
+    Node3 = Node(False, [], [5, 10, 5, 6, 1, 11])
+    root.insert(Node3)
+    root.print()
 
 
 if __name__ == "__main__":
