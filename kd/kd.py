@@ -1,8 +1,4 @@
-import pandas as pd
-import numpy as np
-
 class KDTreeNode:
-    """A node in the KD-tree."""
     def __init__(self, point, left=None, right=None):
         self.point = point
         self.left = left
@@ -43,9 +39,6 @@ def range_search(node, depth, columns_to_index, min_range, max_range):
     axis = depth % len(columns_to_index)
     column = columns_to_index[axis]
     point_value = node.point[column]
-
-
-
 
     # Recursively search the left and right subtrees
     if min_range[axis] <= point_value:
