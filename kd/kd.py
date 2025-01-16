@@ -29,15 +29,6 @@ def build_kdtree(df, columns_to_index, depth=0):
     # Return the current node
     return KDTreeNode(median_point, left_tree, right_tree)
 
-def print_kdtree(node, depth=0):
-    """Prints the KD-tree in a readable format."""
-    if node is None:
-        return
-    indent = ' ' * (depth * 4)
-    print(f"{indent}Depth {depth}: {node.point[['rating', '100g_USD', 'review_date']].tolist()}")
-    print_kdtree(node.left, depth + 1)
-    print_kdtree(node.right, depth + 1)
-
 def range_search(node, depth, columns_to_index, min_range, max_range):
     if node is None:
         return []
