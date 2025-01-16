@@ -1,3 +1,6 @@
+import time
+import pandas as pd
+import matplotlib.pyplot as plt
 class KDTreeNode:
     def __init__(self, point, left=None, right=None):
         self.point = point
@@ -47,3 +50,49 @@ def range_search(node, depth, columns_to_index, min_range, max_range):
         results.extend(range_search(node.right, depth + 1, columns_to_index, min_range, max_range))
 
     return results
+
+def time_kdtree_construction(df, columns_to_index):
+    times = []
+    sizes = []
+
+    for i in range(1, 11):
+        # Multiply the dataset size
+        df_expanded = pd.concat([df] * i, ignore_index=True)
+        sizes.append(len(df_expanded))
+
+        start_time = time.time()
+        build_kdtree(df_expanded, columns_to_index)
+        end_time = time.time()
+
+        times.append(end_time - start_time)
+
+    # Plot the results
+    plt.figure(figsize=(10, 6))
+    plt.plot(sizes, times, marker='o')
+    plt.xlabel('Dataset Size')
+    plt.ylabel('Time (seconds)')
+    plt.title('KD-Tree Construction Time vs Dataset Size')
+    plt.grid(True)
+    plt.show()
+
+def time_range_search(df, columns_to_index, min_range, max_range):
+    times = []
+    sizes = []
+
+    for i in range(1, 11):
+        df_expanded = pd.concat([df] * i, ignore_index=True)
+        sizes.append(len(df_expanded))
+        kdtree = build_kdtree(df_expanded, columns_to_index)
+        
+        start_time = time.time()
+        range_search(kdtree, 0, columns_to_index, min_range, max_range)
+        end_time = time.time()
+        times.append(end_time - start_time)
+
+    plt.figure(figsize=(10, 6))
+    plt.plot(sizes, times, marker='o')
+    plt.xlabel('Dataset Size')
+    plt.ylabel('Time (seconds)')
+    plt.title('Range Search Time vs Dataset Size')
+    plt.grid(True)
+    plt.show()
