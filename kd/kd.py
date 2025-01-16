@@ -37,9 +37,6 @@ def range_search(node, depth, columns_to_index, min_range, max_range):
     column = columns_to_index[axis]
     point_value = node.point[column]
 
-    min_range = min_range + [-np.inf] * (len(columns_to_index) - len(min_range))
-    max_range = max_range + [np.inf] * (len(columns_to_index) - len(max_range))
-
     # Check if the current point is within the range
     in_range = all(min_range[i] <= node.point[columns_to_index[i]] <= max_range[i] for i in range(len(columns_to_index)))
 
