@@ -1,6 +1,6 @@
 from pickle import FALSE
 import pandas as pd
-
+import time
 # ===========================================================================
 def mapMonths(df):
     month_mapping = {
@@ -23,7 +23,7 @@ def parseCSV(path):
 nodeCounter = 0
 
 class Node:
-    def __init__(self, isgroup=False, members=None, mbr=None):
+    def __init__(self, isgroup=False, members=None, mbr=None, data=None):
         global nodeCounter
         nodeCounter += 1
         self.name = nodeCounter
@@ -35,6 +35,7 @@ class Node:
         self.mbr = mbr
         if self.members and not self.mbr:
             self.mbrCalc()
+        self.data = data
 
     def print_ascii(self, level=0):
         indent = '│   ' * level + ('├── ' if level > 0 else '')
@@ -68,6 +69,7 @@ class Node:
                 else:  # Max bounds
                     self.mbr[i] = max(self.mbr[i], member.mbr[i])
 
+    # Update the insert method to fix group transformation logic
     def insert(self, newMember):
         if self.isgroup:
             # Find the best child node to insert into
@@ -86,18 +88,15 @@ class Node:
 
             # Insert into the chosen group
             leastExpansionGroup.insert(newMember)
-            leastExpansionGroup.mbrCalcSingular()
             self.mbrCalc()
         else:
             # Insert into the current leaf node
-            if self.members is None:
-                self.members = [newMember]
-            elif len(self.members) < self.maxMembers:
+            if len(self.members) < self.maxMembers:
                 self.members.append(newMember)
             else:
                 self.members.append(newMember)
                 self.quadraticSplit()
-            self.mbrCalcSingular()
+            self.mbrCalc()
 
     def quadraticSplit(self):
         from itertools import combinations
@@ -109,12 +108,13 @@ class Node:
             z_dist = max(0, mbr1[4] - mbr2[5], mbr2[4] - mbr1[5])
             return x_dist + y_dist + z_dist
 
+        # Find the pair of members that maximizes the distance between their MBRs
         pairs = list(combinations(self.members, 2))
         seedA, seedB = max(pairs, key=lambda pair: mbr_distance(pair[0].mbr, pair[1].mbr))
 
         # Step 2: Create two new groups with the seeds
-        groupA = Node(isgroup=True, members=[seedA])
-        groupB = Node(isgroup=True, members=[seedB])
+        groupA = Node(isgroup=False, members=[seedA])
+        groupB = Node(isgroup=False, members=[seedB])
 
         # Remove seeds from the current members
         self.members.remove(seedA)
@@ -123,8 +123,8 @@ class Node:
         # Step 3: Assign remaining nodes to groups
         while self.members:
             candidate = self.members.pop()
-            groupA.mbrCalcSingular()
-            groupB.mbrCalcSingular()
+            groupA.mbrCalc()
+            groupB.mbrCalc()
 
             # Calculate area expansion for both groups
             groupA_with_candidate = Node(isgroup=False, members=groupA.members + [candidate])
@@ -135,6 +135,7 @@ class Node:
             groupB_with_candidate.mbrCalc()
             groupB_with_candidate.calcSpace()
 
+            # Assign candidate to the group with less area expansion
             if groupA_with_candidate.space < groupB_with_candidate.space:
                 groupA.members.append(candidate)
             else:
@@ -144,6 +145,11 @@ class Node:
         self.isgroup = True
         self.members = [groupA, groupB]
         self.mbrCalc()
+
+        # Ensure newly created groups are properly labeled and MBRs updated
+        for group in self.members:
+            group.isgroup = True
+            group.mbrCalc()
 
     def calcSpace(self):
         if not self.mbr:
@@ -156,38 +162,53 @@ class Node:
 
 
 def main():
+    start_time  = time.time()
     root = Node(isgroup=False)
     root.name = "root"
 
-    A = Node(isgroup=False, mbr=[1, 3, 1, 3, 1, 3])
-    B = Node(isgroup=False, mbr=[2, 4, 2, 4, 2, 4])
-    C = Node(isgroup=False, mbr=[3, 5, 1, 3, 1, 3])
-    D = Node(isgroup=False, mbr=[6, 8, 1, 3, 1, 3])
-    E = Node(isgroup=False, mbr=[1, 3, 4, 6, 1, 3])
-    F = Node(isgroup=False, mbr=[2, 4, 5, 7, 2, 4])
-    G = Node(isgroup=False, mbr=[4, 6, 4, 6, 1, 3])
-    H = Node(isgroup=False, mbr=[5, 7, 5, 7, 2, 4])
+    # A = Node(isgroup=False, mbr=[1, 3, 1, 3, 1, 3])
+    # B = Node(isgroup=False, mbr=[2, 4, 2, 4, 2, 4])
+    # C = Node(isgroup=False, mbr=[3, 5, 1, 3, 1, 3])
+    # D = Node(isgroup=False, mbr=[6, 8, 1, 3, 1, 3])
+    # E = Node(isgroup=False, mbr=[1, 3, 4, 6, 1, 3])
+    # F = Node(isgroup=False, mbr=[2, 4, 5, 7, 2, 4])
+    # G = Node(isgroup=False, mbr=[4, 6, 4, 6, 1, 3])
+    # H = Node(isgroup=False, mbr=[5, 7, 5, 7, 2, 4])
+
+    A = Node(isgroup=False, mbr=[1, 1, 3, 3, 10, 10])
+    B = Node(isgroup=False, mbr=[2, 2, 4, 4, 1, 1])
+    C = Node(isgroup=False, mbr=[5, 5, 1, 1, 0, 0])
+    D = Node(isgroup=False, mbr=[6, 6, 1, 1, 2, 2])
+    E = Node(isgroup=False, mbr=[8, 8, 4, 4, 2, 2])
+    # F = Node(isgroup=False, mbr=[2, 4, 5, 7, 0, 0])
+    # G = Node(isgroup=False, mbr=[4, 6, 4, 6, 0, 0])
+    # H = Node(isgroup=False, mbr=[5, 7, 5, 7, 0, 0])
 
     A.name = "A"
     B.name = "B"
     C.name = "C"
     D.name = "D"
     E.name = "E"
-    F.name = "F"
-    G.name = "G"
-    H.name = "H"
+    # F.name = "F"
+    # G.name = "G"
+    # H.name = "H"
 
     root.insert(A)
     root.insert(B)
     root.insert(C)
     root.insert(D)
     root.insert(E)
-    root.insert(F)
-    root.insert(G)
-    root.insert(H)
+
+    root.insert(D)
+    root.insert(D)
+    # root.insert(F)
+    # root.insert(G)
+    # root.insert(H)
 
     root.print_ascii()
-
+    end_time = time.time()
+    time_taken = end_time - start_time
+    print(time_taken)
 if __name__ == "__main__":
     main()
 
