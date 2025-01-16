@@ -1,6 +1,8 @@
-from pickle import FALSE
+
 import pandas as pd
 import time
+
+
 # ===========================================================================
 def mapMonths(df):
     month_mapping = {
@@ -13,14 +15,17 @@ def mapMonths(df):
     df["review_date"] = df["year"] + df["month_name"].map(month_mapping)
     return df
 
+
 def parseCSV(path):
     df = pd.read_csv(path)
     df = mapMonths(df)
     for index, row in df.iterrows():
         print(row["review_date"], row["rating"], row["100g_USD"])
 
+
 # ===========================================================================
 nodeCounter = 0
+
 
 class Node:
     def __init__(self, isgroup=False, members=None, mbr=None, data=None):
@@ -160,9 +165,33 @@ class Node:
             z = self.mbr[5] - self.mbr[4]
             self.space = x * y * z
 
+    def search(self, search_param):
+        def containMbr(node_mbr, search_mbr):
+            # print("search: ", search_mbr)
+            # print("current: ", node_mbr)
+            if (search_mbr[0] <= node_mbr[0] and search_mbr[1] >= node_mbr[1] and search_mbr[2] <= node_mbr[2] and
+                    search_mbr[3] >= node_mbr[3] and search_mbr[4] <= node_mbr[4] and search_mbr[5] >= node_mbr[5]):
+                # print("ok")
+                return True
+            else:
+                return False
+
+        nodes = []
+        for node in self.members:
+            # print("checking: ", node.name)
+            if node.isgroup:
+                if containMbr(node.mbr, search_param):
+                    nodes += node.search(search_param)
+            elif containMbr(node.mbr, search_param):
+                nodes.append(node)
+        # print("nodes: ", len(nodes))
+        # for node in nodes:
+        #     print(node.name)
+        return nodes
+
 
 def main():
-    start_time  = time.time()
+    start_time = time.time()
     root = Node(isgroup=False)
     root.name = "root"
 
@@ -209,6 +238,17 @@ def main():
     end_time = time.time()
     time_taken = end_time - start_time
     print(time_taken)
+
+    searchTime = time.time()
+    result = root.search([2, 2, 4, 4, 1, 1])
+    searchTimeEnd = time.time()
+    searchFinal = searchTime - searchTimeEnd
+
+    print("SEARCH TIME: ", searchFinal)
+    print("search results: ")
+    for item in result:
+        print(item.name + ", ", end="")
+
+
 if __name__ == "__main__":
     main()
-
