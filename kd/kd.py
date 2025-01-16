@@ -33,16 +33,19 @@ def range_search(node, depth, columns_to_index, min_range, max_range):
     if node is None:
         return []
 
-    axis = depth % len(columns_to_index)
-    column = columns_to_index[axis]
-    point_value = node.point[column]
-
     # Check if the current point is within the range
     in_range = all(min_range[i] <= node.point[columns_to_index[i]] <= max_range[i] for i in range(len(columns_to_index)))
 
     results = []
     if in_range:
         results.append(node.point)
+
+    axis = depth % len(columns_to_index)
+    column = columns_to_index[axis]
+    point_value = node.point[column]
+
+
+
 
     # Recursively search the left and right subtrees
     if min_range[axis] <= point_value:
