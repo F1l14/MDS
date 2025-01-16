@@ -1,8 +1,5 @@
 from pickle import FALSE
-
 import pandas as pd
-import self
-
 
 # ===========================================================================
 def mapMonths(df):
@@ -16,21 +13,14 @@ def mapMonths(df):
     df["review_date"] = df["year"] + df["month_name"].map(month_mapping)
     return df
 
-
 def parseCSV(path):
     df = pd.read_csv(path)
     df = mapMonths(df)
-    # print(df[["review_date", "rating", "100g_USD"]].head())
     for index, row in df.iterrows():
         print(row["review_date"], row["rating"], row["100g_USD"])
 
-
-# PRINT CSV DATA
-# parseCSV("coffee_analysis.csv")
-
 # ===========================================================================
 nodeCounter = 0
-
 
 class Node:
     def __init__(self, isgroup=False, members=None, mbr=None):
@@ -38,211 +28,145 @@ class Node:
         nodeCounter += 1
         self.name = nodeCounter
         self.isgroup = isgroup
-        self.members = members
+        self.members = members if members is not None else []
         self.maxMembers = 4
-        # [ xmin , xmax, ymin, ymax, zmin, zmax ]
+        self.space = 0
+        # [ xmin, xmax, ymin, ymax, zmin, zmax ]
         self.mbr = mbr
-        if self.members is not None and self.mbr is None:
+        if self.members and not self.mbr:
             self.mbrCalc()
 
-        # used for quadratic split
-        self.space = None
-
-    def print(self):
-        if self.isgroup:
-            state = "Group"
-        else:
-            state = "Leaf"
-
-        print("Node: ", str(self.name), state)
-        print("MBR: ", end="")
-        if self.mbr is not None:
-            print(self.mbr, end="")
-        print(" ")
-        print("Members: ", end="")
-        if self.members is not None:
+    def print_ascii(self, level=0):
+        indent = '│   ' * level + ('├── ' if level > 0 else '')
+        node_type = "Group" if self.isgroup else "Leaf"
+        print(f"{indent}Node {self.name} ({node_type}) MBR: {self.mbr}")
+        if self.members:
             for member in self.members:
-                print(str(member.name) + ", ", end="")
-        print(" ")
-
-    def printWhole(self):
-        self.print()
-        if self.isgroup:
-            if self.members is not None:
-                for member in self.members:
-                    member.printWhole()
-
-
-
+                member.print_ascii(level + 1)
 
     def mbrCalcSingular(self):
-        if self.members is not None:
-            last_member = self.members[-1]
-            if self.mbr is None:
-                self.mbr = last_member.mbr
-            else:
-                # xmin
-                if self.mbr[0] > last_member.mbr[0]:
-                    self.mbr[0] = last_member.mbr[0]
-                # xmax
-                if self.mbr[1] < last_member.mbr[1]:
-                    self.mbr[1] = last_member.mbr[1]
-
-                # ymin
-                if self.mbr[2] > last_member.mbr[2]:
-                    self.mbr[2] = last_member.mbr[2]
-                # ymax
-                if self.mbr[3] < last_member.mbr[3]:
-                    self.mbr[3] = last_member.mbr[3]
-
-                # zmin
-                if self.mbr[4] > last_member.mbr[4]:
-                    self.mbr[4] = last_member.mbr[4]
-                # zmax
-                if self.mbr[5] < last_member.mbr[5]:
-                    self.mbr[5] = last_member.mbr[5]
+        if self.members:
+            for member in self.members:
+                if self.mbr is None:
+                    self.mbr = member.mbr[:]
+                else:
+                    self.mbr[0] = min(self.mbr[0], member.mbr[0])
+                    self.mbr[1] = max(self.mbr[1], member.mbr[1])
+                    self.mbr[2] = min(self.mbr[2], member.mbr[2])
+                    self.mbr[3] = max(self.mbr[3], member.mbr[3])
+                    self.mbr[4] = min(self.mbr[4], member.mbr[4])
+                    self.mbr[5] = max(self.mbr[5], member.mbr[5])
 
     def mbrCalc(self):
-        if not self.mbr:
-            if self.members is not None:
-                self.mbr = self.members[0].mbr
-
-        # safety check
-        if self.mbr[0] > self.mbr[1]:
-            # multiple assignment swap
-            self.mbr[0], self.mbr[1] = self.mbr[1], self.mbr[0]
-        if self.mbr[2] > self.mbr[3]:
-            self.mbr[2], self.mbr[3] = self.mbr[3], self.mbr[2]
-        if self.mbr[4] > self.mbr[5]:
-            self.mbr[4], self.mbr[5] = self.mbr[5], self.mbr[4]
-
-        # mbr calculation
-        for node in self.members:
-            # xmin
-            if self.mbr[0] > node.mbr[0]:
-                self.mbr[0] = node.mbr[0]
-            # xmax
-            if self.mbr[1] < node.mbr[1]:
-                self.mbr[1] = node.mbr[1]
-
-            # ymin
-            if self.mbr[2] > node.mbr[2]:
-                self.mbr[2] = node.mbr[2]
-            # ymax
-            if self.mbr[3] < node.mbr[3]:
-                self.mbr[3] = node.mbr[3]
-
-            # zmin
-            if self.mbr[4] > node.mbr[4]:
-                self.mbr[4] = node.mbr[4]
-            # zmax
-            if self.mbr[5] < node.mbr[5]:
-                self.mbr[5] = node.mbr[5]
+        if not self.members:
+            return
+        self.mbr = self.members[0].mbr[:]
+        for member in self.members[1:]:
+            for i in range(6):
+                if i % 2 == 0:  # Min bounds
+                    self.mbr[i] = min(self.mbr[i], member.mbr[i])
+                else:  # Max bounds
+                    self.mbr[i] = max(self.mbr[i], member.mbr[i])
 
     def insert(self, newMember):
         if self.isgroup:
+            # Find the best child node to insert into
             leastExpansionGroup = None
-            lestExpansion = 0
+            leastExpansion = float('inf')
 
             for node in self.members:
-                x, y, z = 0, 0, 0
-                # x axis
-                if newMember.mbr[0] < node.mbr[0]:
-                    x += node.mbr[0] - newMember.mbr[0]
-                if newMember.mbr[1] > node.mbr[1]:
-                    x += newMember.mbr[1] - node.mbr[1]
-                # y axis
-                if newMember.mbr[2] < node.mbr[2]:
-                    y += node.mbr[2] - newMember.mbr[2]
-                if newMember.mbr[3] > node.mbr[3]:
-                    y += newMember.mbr[3] - node.mbr[3]
-                # z axis
-                if newMember.mbr[4] < node.mbr[4]:
-                    z += node.mbr[4] - newMember.mbr[4]
-                if newMember.mbr[5] > node.mbr[5]:
-                    z += newMember.mbr[5] - node.mbr[5]
-                currentExpansion = x + y + z
+                tempNode = Node(isgroup=False, members=node.members + [newMember])
+                tempNode.mbrCalc()
+                tempNode.calcSpace()
 
-                if leastExpansionGroup is None:
+                expansion = tempNode.space - node.space
+                if expansion < leastExpansion:
                     leastExpansionGroup = node
-                    lestExpansion = currentExpansion
-                elif currentExpansion < lestExpansion:
-                    leastExpansionGroup = node
-                    lestExpansion = currentExpansion
-            leastExpansionGroup.members.append(newMember)
+                    leastExpansion = expansion
+
+            # Insert into the chosen group
+            leastExpansionGroup.insert(newMember)
             leastExpansionGroup.mbrCalcSingular()
-
-        elif self.members is None:
-            self.members = [newMember]
-            self.mbrCalcSingular()
-        elif len(self.members) < self.maxMembers:
-            self.members.append(newMember)
-            self.mbrCalcSingular()
+            self.mbrCalc()
         else:
-            print("SPLIT")
-            self.quadraticSplit()
-
-    def calcSpace(self):
-        x = self.mbr[1] - self.mbr[0]
-        y = self.mbr[3] - self.mbr[2]
-        z = self.mbr[5] - self.mbr[4]
-        self.space = x * y * z
+            # Insert into the current leaf node
+            if self.members is None:
+                self.members = [newMember]
+            elif len(self.members) < self.maxMembers:
+                self.members.append(newMember)
+            else:
+                self.members.append(newMember)
+                self.quadraticSplit()
+            self.mbrCalcSingular()
 
     def quadraticSplit(self):
-        tempNodes = []
-        maxPair = None
-        for i in range(len(self.members) - 2):
-            temp = Node(isgroup=False, members=[self.members[i], self.members[i + 1]])
-            temp.calcSpace()
-            tempNodes.append(temp)
-        for node in tempNodes:
-            node.calcSpace()
-            if maxPair is None:
-                maxPair = node
-            elif maxPair.space < node.space:
-                maxPair = node
-        splitA = Node(isgroup=False, members=[maxPair.members[0]])
-        splitA.name = maxPair.members[0].name
-        splitB = Node(isgroup=False, members=[maxPair.members[1]])
-        splitB.name = maxPair.members[1].name
-        self.members.remove(maxPair.members[0])
-        self.members.remove(maxPair.members[1])
+        from itertools import combinations
+
+        # Step 1: Find the pair of nodes that maximizes the distance
+        def mbr_distance(mbr1, mbr2):
+            x_dist = max(0, mbr1[0] - mbr2[1], mbr2[0] - mbr1[1])
+            y_dist = max(0, mbr1[2] - mbr2[3], mbr2[2] - mbr1[3])
+            z_dist = max(0, mbr1[4] - mbr2[5], mbr2[4] - mbr1[5])
+            return x_dist + y_dist + z_dist
+
+        pairs = list(combinations(self.members, 2))
+        seedA, seedB = max(pairs, key=lambda pair: mbr_distance(pair[0].mbr, pair[1].mbr))
+
+        # Step 2: Create two new groups with the seeds
+        groupA = Node(isgroup=True, members=[seedA])
+        groupB = Node(isgroup=True, members=[seedB])
+
+        # Remove seeds from the current members
+        self.members.remove(seedA)
+        self.members.remove(seedB)
+
+        # Step 3: Assign remaining nodes to groups
+        while self.members:
+            candidate = self.members.pop()
+            groupA.mbrCalcSingular()
+            groupB.mbrCalcSingular()
+
+            # Calculate area expansion for both groups
+            groupA_with_candidate = Node(isgroup=False, members=groupA.members + [candidate])
+            groupA_with_candidate.mbrCalc()
+            groupA_with_candidate.calcSpace()
+
+            groupB_with_candidate = Node(isgroup=False, members=groupB.members + [candidate])
+            groupB_with_candidate.mbrCalc()
+            groupB_with_candidate.calcSpace()
+
+            if groupA_with_candidate.space < groupB_with_candidate.space:
+                groupA.members.append(candidate)
+            else:
+                groupB.members.append(candidate)
+
+        # Step 4: Update current node to become a group node
         self.isgroup = True
-        remain = self.members
-        self.members = []
-        self.members.append(splitA)
-        self.members.append(splitB)
-        for node in remain:
-            self.insert(node)
+        self.members = [groupA, groupB]
+        self.mbrCalc()
 
-
-def printlines():
-    print("\n=============================\n")
+    def calcSpace(self):
+        if not self.mbr:
+            self.space = 0
+        else:
+            x = self.mbr[1] - self.mbr[0]
+            y = self.mbr[3] - self.mbr[2]
+            z = self.mbr[5] - self.mbr[4]
+            self.space = x * y * z
 
 
 def main():
-    # Node1 = Node(False, [], [1, -2, 5, 6, 3, 4])
-    # Node2 = Node(False, [], [5, 10, 5, 6, 3, 4])
-    #
-    # root = Node(True, [Node1, Node2], [1, 2, 3, 3, 3, 4])
-    # root.print()
-    #
-    # Node3 = Node(False, [], [5, 10, 5, 6, 1, 11])
-    # root.insert(Node3)
-    # root.print()
-
     root = Node(isgroup=False)
     root.name = "root"
 
-    A = Node(isgroup=False, mbr=[1, 3, 1, 3, 1, 3, ])
-    B = Node(isgroup=False, mbr=[2, 4, 2, 4, 2, 4, ])
-    C = Node(isgroup=False, mbr=[3, 5, 1, 3, 1, 3, ])
-    D = Node(isgroup=False, mbr=[6, 8, 1, 3, 1, 3, ])
-    E = Node(isgroup=False, mbr=[1, 3, 4, 6, 1, 3, ])
-    F = Node(isgroup=False, mbr=[2, 4, 5, 7, 2, 4, ])
-    G = Node(isgroup=False, mbr=[4, 6, 4, 6, 1, 3, ])
-    H = Node(isgroup=False, mbr=[5, 7, 5, 7, 2, 4, ])
-
+    A = Node(isgroup=False, mbr=[1, 3, 1, 3, 1, 3])
+    B = Node(isgroup=False, mbr=[2, 4, 2, 4, 2, 4])
+    C = Node(isgroup=False, mbr=[3, 5, 1, 3, 1, 3])
+    D = Node(isgroup=False, mbr=[6, 8, 1, 3, 1, 3])
+    E = Node(isgroup=False, mbr=[1, 3, 4, 6, 1, 3])
+    F = Node(isgroup=False, mbr=[2, 4, 5, 7, 2, 4])
+    G = Node(isgroup=False, mbr=[4, 6, 4, 6, 1, 3])
+    H = Node(isgroup=False, mbr=[5, 7, 5, 7, 2, 4])
 
     A.name = "A"
     B.name = "B"
@@ -254,30 +178,16 @@ def main():
     H.name = "H"
 
     root.insert(A)
-    # root.print()
-    # printlines()
     root.insert(B)
-    # root.print()
-    # printlines()
     root.insert(C)
-    # root.print()
-    # printlines()
     root.insert(D)
-    # root.print()
-    # printlines()
     root.insert(E)
-    root.printWhole()
-    printlines()
-    # root.insert(F)
-    # root.print()
-    # printlines()
-    # root.insert(G)
-    # root.print()
-    # printlines()
-    # root.insert(H)
-    # root.print()
-    # printlines()
+    root.insert(F)
+    root.insert(G)
+    root.insert(H)
 
+    root.print_ascii()
 
 if __name__ == "__main__":
     main()
+
