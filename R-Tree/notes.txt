@@ -1,3 +1,14 @@
 -review_date
 -rating
 -100g_USD
+
+#first year then month
+
+4 dimensions
+
+store results in csv -> dean
+
+ranged search
+πρεπει να ισχυουν και τα τρια ταυτοχρονα xyz
+
+αν πολυ γρηγορα τοτε copy paste ξανα το csv

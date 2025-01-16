@@ -163,22 +163,22 @@ def insert(entity, M, node):
 
 
 def main():
-    M = 2
-    rootEntity = Entity(Group([]))
+M = 2
+rootEntity = Entity(Group([]))
 
-    A = Node("A", [1, 1, 3, 3])
-    B = Node("B", [2, 2, 5, 5])
-    C = Node("C", [4, 4, 6, 6])
-    D = Node("D", [7, 1, 8, 3])
+A = Node("A", [1, 1, 3, 3])
+B = Node("B", [2, 2, 5, 5])
+C = Node("C", [4, 4, 6, 6])
+D = Node("D", [7, 1, 8, 3])
 
-    insert(rootEntity, M, A)
-    insert(rootEntity, M, B)
-    insert(rootEntity, M, C)
+insert(rootEntity, M, A)
+insert(rootEntity, M, B)
+insert(rootEntity, M, C)
 
-    print("HELLO WORLD")
-    for entity in rtree:
-        entity.print()
+print("HELLO WORLD")
+for entity in rtree:
+    entity.print()
 
 
 if __name__ == "__main__":
-    main()
+main()
