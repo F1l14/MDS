@@ -39,9 +39,10 @@ class Node:
         self.space = 0
         # [ xmin, xmax, ymin, ymax, zmin, zmax ]
         self.mbr = mbr
-        if self.members and not self.mbr:
-            self.mbrCalc()
+
+        self.mbrCalc()
         self.data = data
+        self.hasGroup = False
 
     def print_ascii(self, level=0):
         indent = '│   ' * level + ('├── ' if level > 0 else '')
@@ -51,30 +52,40 @@ class Node:
             for member in self.members:
                 member.print_ascii(level + 1)
 
-    def mbrCalcSingular(self):
-        # Updated for clarity and efficiency
-        if self.members:
-            self.mbr = [float('inf'), float('-inf'), float('inf'), float('-inf'), float('inf'), float('-inf')]
-            for member in self.members:
-                for i in range(6):
-                    if i % 2 == 0:  # Min bounds
-                        self.mbr[i] = min(self.mbr[i], member.mbr[i])
-                    else:  # Max bounds
-                        self.mbr[i] = max(self.mbr[i], member.mbr[i])
+    # def mbrCalcSingular(self):
+    #     # Updated for clarity and efficiency
+    #     if self.members:
+    #         self.mbr = [float('inf'), float('-inf'), float('inf'), float('-inf'), float('inf'), float('-inf')]
+    #         for member in self.members:
+    #             for i in range(6):
+    #                 if i % 2 == 0:  # Min bounds
+    #                     self.mbr[i] = min(self.mbr[i], member.mbr[i])
+    #                 else:  # Max bounds
+    #                     self.mbr[i] = max(self.mbr[i], member.mbr[i])
 
     def mbrCalc(self):
-        if self.members:
-            self.mbr = [float('inf'), float('-inf'), float('inf'), float('-inf'), float('inf'), float('-inf')]
-            for member in self.members:
-                for i in range(6):
-                    if i % 2 == 0:  # Min bounds
-                        self.mbr[i] = min(self.mbr[i], member.mbr[i])
-                    else:  # Max bounds
-                        self.mbr[i] = max(self.mbr[i], member.mbr[i])
+        if self.isgroup:
+            if self.members:
+                # self.mbr = [float('inf'), float('-inf'), float('inf'), float('-inf'), float('inf'), float('-inf')]
+                if self.mbr is None:
+                    self.mbr = self.members[0].mbr[:]
+
+                for member in self.members:
+                    for i in range(6):
+                        if i % 2 == 0:  # Min bounds
+                            try:
+                                self.mbr[i] = min(self.mbr[i], member.mbr[i])
+                            except AttributeError:
+                                print(self.name, self.mbr, self.members)
+
+                        else:  # Max bounds
+                            self.mbr[i] = max(self.mbr[i], member.mbr[i])
 
     # Update the insert method to fix group transformation logic
     def insert(self, newMember):
-        if self.isgroup:
+        if newMember.name == "A":
+            print("inserting:", newMember.name, newMember.mbr)
+        if self.hasGroup:
             # Find the best child node to insert into
             leastExpansionGroup = None
             leastExpansion = float('inf')
@@ -84,8 +95,7 @@ class Node:
                     node.insert(newMember)
                     self.mbrCalc()
                     return
-
-
+            self.calcSpace()
             for node in self.members:
 
                 tempNode = Node(isgroup=False, members=node.members + [newMember])
@@ -112,13 +122,20 @@ class Node:
     def quadraticSplit(self):
         from itertools import combinations
         # Fixed quadratic split logic
-        print("==================================")
-        self.print_ascii()
+        # print("==================================")
+        # self.print_ascii()
+
         def mbr_distance(mbr1, mbr2):
             x_dist = max(0, mbr1[0] - mbr2[1], mbr2[0] - mbr1[1])
             y_dist = max(0, mbr1[2] - mbr2[3], mbr2[2] - mbr1[3])
             z_dist = max(0, mbr1[4] - mbr2[5], mbr2[4] - mbr1[5])
             return x_dist + y_dist + z_dist
+
+
+        # print("============")
+        # for node in self.members:
+        #     print(node.name, node.mbr)
+        # print("============")
 
         pairs = list(combinations(self.members, 2))
         seedA, seedB = max(pairs, key=lambda pair: mbr_distance(pair[0].mbr, pair[1].mbr))
@@ -128,25 +145,20 @@ class Node:
 
         self.members.remove(seedA)
         self.members.remove(seedB)
+        groupA.mbrCalc()
+        groupB.mbrCalc()
 
-        while self.members:
-            candidate = self.members.pop()
-            groupA.mbrCalc()
-            groupB.mbrCalc()
-
-            groupA_with_candidate = Node(isgroup=False, members=groupA.members + [candidate])
-            groupB_with_candidate = Node(isgroup=False, members=groupB.members + [candidate])
-
-            if groupA_with_candidate.space < groupB_with_candidate.space:
-                groupA.members.append(candidate)
-            else:
-                groupB.members.append(candidate)
+        remain = self.members[:]
 
         self.isgroup = True
+        self.hasGroup = True
         self.members = [groupA, groupB]
         self.mbrCalc()
-        self.print_ascii()
-        print("==================================")
+        global root
+        for node in remain:
+            self.insert(node)
+        # self.print_ascii()
+        # print("==================================")
 
     def calcSpace(self):
         if not self.mbr:
@@ -158,23 +170,34 @@ class Node:
             self.space = x * y * z
 
     def search(self, search_param):
-        def containMbr(node_mbr, search_mbr):
+        def containMbr(node_mbr, search_mbr, isgroup):
             # print("search: ", search_mbr)
             # print("current: ", node_mbr)
-            if (search_mbr[0] <= node_mbr[0] and search_mbr[1] >= node_mbr[1] and search_mbr[2] <= node_mbr[2] and
-                    search_mbr[3] >= node_mbr[3] and search_mbr[4] <= node_mbr[4] and search_mbr[5] >= node_mbr[5]):
-                print("ok")
-                return True
+            if isgroup:
+                for i in range(0, 4, 2):
+                    if node_mbr[i+1] < search_mbr[i] or search_mbr[i+1] < node_mbr[i]:
+                        return False
+                    else:
+                        print("ok")
+                        return True
+
             else:
-                return False
+
+                for i in range(0, 4, 2):
+
+                    if search_mbr[i] > node_mbr[i] or search_param[i + 1] < node_mbr[i + 1]:
+                        return False
+                    else:
+                        print("ok")
+                        return True
 
         nodes = []
         for node in self.members:
-            print("checking: ", node.name, search_param)
+            print("checking: ", node.name, search_param, node.mbr, node.isgroup)
             if node.isgroup:
-                if containMbr(node.mbr, search_param):
+                if containMbr(node.mbr, search_param, node.isgroup):
                     nodes += node.search(search_param)
-            elif containMbr(node.mbr, search_param):
+            elif containMbr(node.mbr, search_param, node.isgroup):
                 nodes.append(node)
         # print("nodes: ", len(nodes))
         # for node in nodes:
@@ -182,10 +205,12 @@ class Node:
         return nodes
 
 
+root = Node(isgroup=False)
+root.name = "root"
+
+
 def main():
     start_time = time.time()
-    root = Node(isgroup=False)
-    root.name = "root"
 
     # A = Node(isgroup=False, mbr=[1, 3, 1, 3, 1, 3])
     # B = Node(isgroup=False, mbr=[2, 4, 2, 4, 2, 4])
@@ -214,18 +239,13 @@ def main():
     G.name = "G"
     H.name = "H"
 
-    root.insert(A)
-    root.insert(B)
-    root.insert(C)
+    node_list = [A, B, C, D, E, F, G, H]
+    for node in node_list:
+        root.insert(node)
+        # print("INSERTING: ", node.name, node.mbr)
+        # root.print_ascii()
+        # print("========================================")
     root.insert(D)
-    root.insert(E)
-
-
-    root.insert(D)
-    # root.insert(F)
-    # root.insert(G)
-    # root.insert(H)
-
     root.print_ascii()
     end_time = time.time()
     time_taken = end_time - start_time
