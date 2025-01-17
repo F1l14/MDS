@@ -52,6 +52,13 @@ bst = bst.BinarySearchTree()
 for point in points: 
     bst.insert(point)
 
+# Create the linked list of leaves
+bst.create_leaf_linked_list()
+
+#Display the linked list of leaves
+#print("\nLinked List of Leaves:")
+#bst.display_linked_list()
+
 # Stop the timer for range tree construction
 end_time_range_tree = time.time()
 
@@ -59,18 +66,9 @@ end_time_range_tree = time.time()
 elapsed_time_range_tree = end_time_range_tree - start_time_range_tree
 print(f"Time taken for range tree construction: {elapsed_time_range_tree} seconds.\n")
 
-
 # Display the tree structure
-print("Binary Search Tree Structure:")
-bst.display(bst.root)
-
-# Start the timer 
-start_time_load = time.time() 
-
-# Create and display the linked list of leaves
-bst.create_leaf_linked_list()
-print("\nLinked List of Leaves:")
-bst.display_linked_list()
+#print("Binary Search Tree Structure:")
+#bst.display(bst.root)
 
 
 
