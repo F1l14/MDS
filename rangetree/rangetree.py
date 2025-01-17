@@ -5,6 +5,7 @@ class Node:
         self.left = None      # Left child
         self.right = None     # Right child
         self.secondary_tree = None  # Secondary tree (2D range tree)
+        self.tertiary_tree = None   # Tertiary tree (1D range tree)
 
 class RangeTree3D:
     """3D Range Tree implementation."""
