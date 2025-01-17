@@ -1,3 +1,4 @@
+from ftplib import print_line
 
 import pandas as pd
 import time
@@ -51,28 +52,25 @@ class Node:
                 member.print_ascii(level + 1)
 
     def mbrCalcSingular(self):
+        # Updated for clarity and efficiency
         if self.members:
+            self.mbr = [float('inf'), float('-inf'), float('inf'), float('-inf'), float('inf'), float('-inf')]
             for member in self.members:
-                if self.mbr is None:
-                    self.mbr = member.mbr[:]
-                else:
-                    self.mbr[0] = min(self.mbr[0], member.mbr[0])
-                    self.mbr[1] = max(self.mbr[1], member.mbr[1])
-                    self.mbr[2] = min(self.mbr[2], member.mbr[2])
-                    self.mbr[3] = max(self.mbr[3], member.mbr[3])
-                    self.mbr[4] = min(self.mbr[4], member.mbr[4])
-                    self.mbr[5] = max(self.mbr[5], member.mbr[5])
+                for i in range(6):
+                    if i % 2 == 0:  # Min bounds
+                        self.mbr[i] = min(self.mbr[i], member.mbr[i])
+                    else:  # Max bounds
+                        self.mbr[i] = max(self.mbr[i], member.mbr[i])
 
     def mbrCalc(self):
-        if not self.members:
-            return
-        self.mbr = self.members[0].mbr[:]
-        for member in self.members[1:]:
-            for i in range(6):
-                if i % 2 == 0:  # Min bounds
-                    self.mbr[i] = min(self.mbr[i], member.mbr[i])
-                else:  # Max bounds
-                    self.mbr[i] = max(self.mbr[i], member.mbr[i])
+        if self.members:
+            self.mbr = [float('inf'), float('-inf'), float('inf'), float('-inf'), float('inf'), float('-inf')]
+            for member in self.members:
+                for i in range(6):
+                    if i % 2 == 0:  # Min bounds
+                        self.mbr[i] = min(self.mbr[i], member.mbr[i])
+                    else:  # Max bounds
+                        self.mbr[i] = max(self.mbr[i], member.mbr[i])
 
     # Update the insert method to fix group transformation logic
     def insert(self, newMember):
@@ -82,6 +80,14 @@ class Node:
             leastExpansion = float('inf')
 
             for node in self.members:
+                if node.isgroup:
+                    node.insert(newMember)
+                    self.mbrCalc()
+                    return
+
+
+            for node in self.members:
+
                 tempNode = Node(isgroup=False, members=node.members + [newMember])
                 tempNode.mbrCalc()
                 tempNode.calcSpace()
@@ -105,56 +111,42 @@ class Node:
 
     def quadraticSplit(self):
         from itertools import combinations
-
-        # Step 1: Find the pair of nodes that maximizes the distance
+        # Fixed quadratic split logic
+        print("==================================")
+        self.print_ascii()
         def mbr_distance(mbr1, mbr2):
             x_dist = max(0, mbr1[0] - mbr2[1], mbr2[0] - mbr1[1])
             y_dist = max(0, mbr1[2] - mbr2[3], mbr2[2] - mbr1[3])
             z_dist = max(0, mbr1[4] - mbr2[5], mbr2[4] - mbr1[5])
             return x_dist + y_dist + z_dist
 
-        # Find the pair of members that maximizes the distance between their MBRs
         pairs = list(combinations(self.members, 2))
         seedA, seedB = max(pairs, key=lambda pair: mbr_distance(pair[0].mbr, pair[1].mbr))
 
-        # Step 2: Create two new groups with the seeds
-        groupA = Node(isgroup=False, members=[seedA])
-        groupB = Node(isgroup=False, members=[seedB])
+        groupA = Node(isgroup=True, members=[seedA])
+        groupB = Node(isgroup=True, members=[seedB])
 
-        # Remove seeds from the current members
         self.members.remove(seedA)
         self.members.remove(seedB)
 
-        # Step 3: Assign remaining nodes to groups
         while self.members:
             candidate = self.members.pop()
             groupA.mbrCalc()
             groupB.mbrCalc()
 
-            # Calculate area expansion for both groups
             groupA_with_candidate = Node(isgroup=False, members=groupA.members + [candidate])
-            groupA_with_candidate.mbrCalc()
-            groupA_with_candidate.calcSpace()
-
             groupB_with_candidate = Node(isgroup=False, members=groupB.members + [candidate])
-            groupB_with_candidate.mbrCalc()
-            groupB_with_candidate.calcSpace()
 
-            # Assign candidate to the group with less area expansion
             if groupA_with_candidate.space < groupB_with_candidate.space:
                 groupA.members.append(candidate)
             else:
                 groupB.members.append(candidate)
 
-        # Step 4: Update current node to become a group node
         self.isgroup = True
         self.members = [groupA, groupB]
         self.mbrCalc()
-
-        # Ensure newly created groups are properly labeled and MBRs updated
-        for group in self.members:
-            group.isgroup = True
-            group.mbrCalc()
+        self.print_ascii()
+        print("==================================")
 
     def calcSpace(self):
         if not self.mbr:
@@ -171,14 +163,14 @@ class Node:
             # print("current: ", node_mbr)
             if (search_mbr[0] <= node_mbr[0] and search_mbr[1] >= node_mbr[1] and search_mbr[2] <= node_mbr[2] and
                     search_mbr[3] >= node_mbr[3] and search_mbr[4] <= node_mbr[4] and search_mbr[5] >= node_mbr[5]):
-                # print("ok")
+                print("ok")
                 return True
             else:
                 return False
 
         nodes = []
         for node in self.members:
-            # print("checking: ", node.name)
+            print("checking: ", node.name, search_param)
             if node.isgroup:
                 if containMbr(node.mbr, search_param):
                     nodes += node.search(search_param)
@@ -209,18 +201,18 @@ def main():
     C = Node(isgroup=False, mbr=[5, 5, 1, 1, 0, 0])
     D = Node(isgroup=False, mbr=[6, 6, 1, 1, 2, 2])
     E = Node(isgroup=False, mbr=[8, 8, 4, 4, 2, 2])
-    # F = Node(isgroup=False, mbr=[2, 4, 5, 7, 0, 0])
-    # G = Node(isgroup=False, mbr=[4, 6, 4, 6, 0, 0])
-    # H = Node(isgroup=False, mbr=[5, 7, 5, 7, 0, 0])
+    F = Node(isgroup=False, mbr=[2, 4, 5, 7, 0, 0])
+    G = Node(isgroup=False, mbr=[4, 6, 4, 6, 0, 0])
+    H = Node(isgroup=False, mbr=[5, 7, 5, 7, 0, 0])
 
     A.name = "A"
     B.name = "B"
     C.name = "C"
     D.name = "D"
     E.name = "E"
-    # F.name = "F"
-    # G.name = "G"
-    # H.name = "H"
+    F.name = "F"
+    G.name = "G"
+    H.name = "H"
 
     root.insert(A)
     root.insert(B)
@@ -228,7 +220,7 @@ def main():
     root.insert(D)
     root.insert(E)
 
-    root.insert(D)
+
     root.insert(D)
     # root.insert(F)
     # root.insert(G)
@@ -240,14 +232,14 @@ def main():
     print(time_taken)
 
     searchTime = time.time()
-    result = root.search([2, 2, 4, 4, 1, 1])
+    result = root.search([1, 8, 1, 7, 0, 10])
     searchTimeEnd = time.time()
     searchFinal = searchTime - searchTimeEnd
 
     print("SEARCH TIME: ", searchFinal)
     print("search results: ")
     for item in result:
-        print(item.name + ", ", end="")
+        print(str(item.name) + ", ", end="")
 
 
 if __name__ == "__main__":
