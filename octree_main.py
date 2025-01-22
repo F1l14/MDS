@@ -4,6 +4,7 @@ import lsh.lsh as lsh
 import pandas as pd
 import time
 import os
+import sys
 
 # Start the timer for loading
 start_time_load = time.time()
@@ -123,7 +124,7 @@ os.remove("archive/query_output.csv")
 run_lsh = input("Would you like to run the LSH phase of the query? (no for exit): ")
 if (run_lsh == "no"):
     print("Exiting program.")
-    exit()
+    sys.exit()
 
 dataset['doc_id'] = dataset.index
 doc_nr = dataset['doc_id'].max()
@@ -197,7 +198,7 @@ compute_quality = input("\nWould you like to compute the LSH quality compared to
 
 if compute_quality == 'no':
     print("\nExiting program.")
-    exit()
+    sys.exit()
 
 print("\nComputing exact Jaccard Similarities for all document pairs (using raw reviews)...")
 

@@ -1,4 +1,5 @@
 import os
+import sys
 
 print("Select which Python file to run:")
 print("1. KD-Tree")
@@ -25,6 +26,6 @@ elif choice == '4':
 
 elif choice == '5':
     print("Exiting program.")
-    exit()
+    sys.exit()
 else:
     print("Invalid choice. Please select 1 - 5.")
