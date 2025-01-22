@@ -3,6 +3,8 @@ import time
 import os
 from rangetree import rangetree as range_tree  # Assuming you save the above code in `range_tree_3d.py`
 import functions.functions as func  # For date_to_number and get_valid_input
+import lsh.lsh as lsh
+
 
 # Start the timer for loading
 start_time_load = time.time()
