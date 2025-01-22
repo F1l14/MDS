@@ -51,46 +51,36 @@ def range_search(node, depth, columns_to_index, min_range, max_range):
 
     return results
 
-def time_kdtree_construction(df, columns_to_index):
-    times = []
+def plot_times(df, columns_to_index, min_range, max_range):
+    construction_times = []
+    search_times = []
     sizes = []
 
     for i in range(1, 11):
-        # Multiply the dataset size
         df_expanded = pd.concat([df] * i, ignore_index=True)
         sizes.append(len(df_expanded))
 
         start_time = time.time()
-        build_kdtree(df_expanded, columns_to_index)
+        kdtree = build_kdtree(df_expanded, columns_to_index)
         end_time = time.time()
+        construction_times.append(end_time - start_time)
 
-        times.append(end_time - start_time)
+        start_time = time.time()
+        range_search(kdtree, 0, columns_to_index, min_range, max_range)
+        end_time = time.time()
+        search_times.append(end_time - start_time)
 
     # Plot the results
     plt.figure(figsize=(10, 6))
-    plt.plot(sizes, times, marker='o')
+    plt.plot(sizes, construction_times, marker='o')
     plt.xlabel('Dataset Size')
     plt.ylabel('Time (seconds)')
     plt.title('KD-Tree Construction Time vs Dataset Size')
     plt.grid(True)
     plt.show()
 
-def time_range_search(df, columns_to_index, min_range, max_range):
-    times = []
-    sizes = []
-
-    for i in range(1, 11):
-        df_expanded = pd.concat([df] * i, ignore_index=True)
-        sizes.append(len(df_expanded))
-        kdtree = build_kdtree(df_expanded, columns_to_index)
-        
-        start_time = time.time()
-        range_search(kdtree, 0, columns_to_index, min_range, max_range)
-        end_time = time.time()
-        times.append(end_time - start_time)
-
     plt.figure(figsize=(10, 6))
-    plt.plot(sizes, times, marker='o')
+    plt.plot(sizes, search_times, marker='o')
     plt.xlabel('Dataset Size')
     plt.ylabel('Time (seconds)')
     plt.title('Range Search Time vs Dataset Size')

@@ -41,7 +41,6 @@ start_time_kdtree = time.time()
 columns_to_index = ['review_date', 'rating', '100g_USD']
 root = kd.build_kdtree(dataset, columns_to_index)
 
-kd.time_kdtree_construction(dataset, columns_to_index)
 
 # Stop the timer for KD-Tree construction
 end_time_kdtree = time.time()
@@ -81,7 +80,7 @@ min_range = [min_x, min_y, min_z]
 max_range = [max_x, max_y, max_z]
 range_query_result = kd.range_search(root, 0, columns_to_index, min_range, max_range)
 
-kd.time_range_search(dataset, columns_to_index, min_range, max_range)
+kd.plot_times(dataset, columns_to_index, min_range, max_range)
 
 # Stop the timer for the range query
 query_end_time = time.time()
