@@ -77,7 +77,7 @@ def plot_times(df, columns_to_index, min_range, max_range):
     plt.ylabel('Time (seconds)')
     plt.title('KD-Tree Construction Time vs Dataset Size')
     plt.grid(True)
-    plt.show()
+    # plt.show(block=False)
 
     plt.figure(figsize=(10, 6))
     plt.plot(sizes, search_times, marker='o')
@@ -85,4 +85,4 @@ def plot_times(df, columns_to_index, min_range, max_range):
     plt.ylabel('Time (seconds)')
     plt.title('Range Search Time vs Dataset Size')
     plt.grid(True)
-    plt.show()
+    plt.show(block=False)
