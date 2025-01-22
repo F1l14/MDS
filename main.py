@@ -7,6 +7,9 @@ import functions.functions as func  # For date_to_number and get_valid_input
 import lsh.lsh as lsh
 
 
+
+# LOADING OF THE CSV
+
 # Start the timer for loading
 start_time_load = time.time()
 
@@ -20,6 +23,11 @@ end_time_load = time.time()
 elapsed_time_load = end_time_load - start_time_load
 print(f"Time taken for loading: {elapsed_time_load} seconds.\n")
 
+
+
+
+# PREPROCESSING PHASE
+
 # Start the timer for preprocessing
 start_time_preprocess = time.time()
 
@@ -32,6 +40,11 @@ end_time_preprocess = time.time()
 # Calculate the elapsed time for preprocessing
 elapsed_time_preprocess = end_time_preprocess - start_time_preprocess
 print(f"Time taken for preprocessing: {elapsed_time_preprocess} seconds.\n")
+
+
+
+
+# RANGE TREE CONSTRUCTION PHASE
 
 # Start the timer for range tree construction
 start_time_range_tree = time.time()
@@ -48,6 +61,12 @@ end_time_range_tree = time.time()
 # Calculate the elapsed time for range tree construction
 elapsed_time_range_tree = end_time_range_tree - start_time_range_tree
 print(f"Time taken for range tree construction: {elapsed_time_range_tree} seconds.\n")
+
+
+
+
+# RANGE QUERY PHASE
+
 
 # Remind the user of the min and max values
 min_review_date, max_review_date = dataset['review_date'].min(), dataset['review_date'].max()
@@ -81,6 +100,8 @@ query_end_time = time.time()
 elapsed_time_query = query_end_time - query_start_time
 print(f"Time taken for query completion: {elapsed_time_query} seconds.\n")
 
+
+
 # Extract the data from the nodes
 query_data = [
     dataset.loc[(dataset['review_date'] == point[0]) &
@@ -100,7 +121,8 @@ df_cleaned = query_df.drop_duplicates()
 df_cleaned.to_csv("archive/query_output.csv", index=False)
     
     
-    
+
+
     
 # LSH PHASE OF THE QUERY
 
