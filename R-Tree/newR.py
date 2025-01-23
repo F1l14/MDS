@@ -46,7 +46,42 @@ def leastExpansionGroup(groupA, groupB, newMember):
             leastExpansion = expansion
     return lEG
 
+def search(search_param, members):
+    def containMbr(node_mbr, search_mbr, isgroup):
+        # print("search: ", search_mbr)
+        # print("current: ", node_mbr)
+        if isgroup:
+            #zero to four with step two
+            for i in range(0, 6, 2):
+                if node_mbr[i + 1] < search_mbr[i] or search_mbr[i + 1] < node_mbr[i]:
+                    return False
 
+                    # print("ok")
+            return True
+
+        else:
+
+            for i in range(0, 6, 2):
+
+                if not (search_mbr[i] <= node_mbr[i] and search_mbr[i+1] >= node_mbr[i+1]):
+                    return False
+
+                    # print("ok")
+            print(search_param, node_mbr)
+            return True
+
+    nodes = []
+    for node in members:
+        # print("checking: ", node.name, search_param, node.mbr, node.isgroup)
+        if node.isgroup:
+            if containMbr(node.mbr, search_param, node.isgroup):
+                nodes += search(search_param, node.members)
+        elif containMbr(node.mbr, search_param, node.isgroup):
+            nodes.append(node)
+    # print("nodes: ", len(nodes))
+    # for node in nodes:
+    #     print(node.name)
+    return nodes
 class Node:
     def __init__(self, isgroup=False, members=None, mbr=None, data=None):
         global nodeCounter
@@ -175,42 +210,7 @@ class Node:
         # self.print_ascii()
         # print("==================================")
 
-    def search(self, search_param, members):
-        def containMbr(node_mbr, search_mbr, isgroup):
-            # print("search: ", search_mbr)
-            # print("current: ", node_mbr)
-            if isgroup:
-                #zero to four with step two
-                for i in range(0, 6, 2):
-                    if node_mbr[i + 1] < search_mbr[i] or search_mbr[i + 1] < node_mbr[i]:
-                        return False
 
-                        # print("ok")
-                return True
-
-            else:
-
-                for i in range(0, 6, 2):
-
-                    if not (search_mbr[i] <= node_mbr[i] and search_mbr[i+1] >= node_mbr[i+1]):
-                        return False
-
-                        # print("ok")
-                print(search_param, node_mbr)
-                return True
-
-        nodes = []
-        for node in members:
-            # print("checking: ", node.name, search_param, node.mbr, node.isgroup)
-            if node.isgroup:
-                if containMbr(node.mbr, search_param, node.isgroup):
-                    nodes += node.search(search_param, node.members)
-            elif containMbr(node.mbr, search_param, node.isgroup):
-                nodes.append(node)
-        # print("nodes: ", len(nodes))
-        # for node in nodes:
-        #     print(node.name)
-        return nodes
 
 
 root = Node(isgroup=False)
@@ -258,7 +258,7 @@ def main():
     print(time_taken)
 
     searchTime = time.time()
-    result = root.search([201711.0, 201711.0, 93.0, 93.0, 5.29, 5.29], root.members)
+    result = search([201711.0, 201711.0, 93.0, 93.0, 5.29, 5.29], root.members)
     searchTimeEnd = time.time()
     searchFinal = searchTime - searchTimeEnd
 
