@@ -1,18 +1,4 @@
 import pandas as pd
-import time
-
-
-# ===========================================================================
-def mapMonths(df):
-    month_mapping = {
-        'January': "1", 'February': "2", 'March': "3", 'April': "4",
-        'May': "5", 'June': "6", 'July': "7", 'August': "8",
-        'September': "9", 'October': "10", 'November': "11", 'December': "12"
-    }
-    df["month_name"] = df["review_date"].str.split(' ').str[0]
-    df["year"] = df["review_date"].str.split(' ').str[1]
-    df["review_date"] = df["year"] + df["month_name"].map(month_mapping)
-    return df
 
 csv_columns = None
 
@@ -22,20 +8,22 @@ def parseCSV(path):
     global csv_columns
     csv_columns = df.columns
     for index, row in df.iterrows():
-
         # print(row["review_date"], row["rating"], row["100g_USD"])
         # if index < 50:
         root.insert(
-            Node(isgroup=False,members=None, mbr=[float(row["review_date"]), float(row["review_date"]), float(row["rating"]),
-                                     float(row["rating"]),
-                                     float(row["100g_USD"]), float(row["100g_USD"])], data=row)
+            Node(isgroup=False, members=None,
+                 mbr=[float(row["review_date"]), float(row["review_date"]), float(row["rating"]),
+                      float(row["rating"]),
+                      float(row["100g_USD"]), float(row["100g_USD"])], data=row)
         )
+
 
 def saveCSV(data):
     results_df = pd.DataFrame(columns=csv_columns)
     for item in data:
         results_df = pd.concat([results_df, item.data.to_frame().T])
     results_df.to_csv("output.csv", index=False)
+
 
 # ===========================================================================
 nodeCounter = 0
@@ -54,7 +42,7 @@ def leastExpansionGroup(groupA, groupB, newMember):
         if expansion < leastExpansion:
             lEG = node
             leastExpansion = expansion
-    if(groupA.space !=0 and groupB.space ==0):
+    if (groupA.space != 0 and groupB.space == 0):
         lEG = groupB
     return lEG
 
@@ -90,7 +78,6 @@ def search(search_param, members):
                 nodes += search(search_param, node.members)
         elif containMbr(node.mbr, search_param, node.isgroup):
             nodes.append(node)
-
     return nodes
 
 
@@ -215,6 +202,7 @@ class Node:
             # print("GROUP")
             group.insert(node)
 
+
 root = Node(isgroup=False)
 root.name = "root"
 
@@ -253,32 +241,3 @@ def testdata():
         root.print_ascii()
         print("=============================")
     root.insert(D)
-
-
-def main():
-    start_time = time.time()
-
-    # ================
-    # testdata()
-    parseCSV("simplified_coffee.csv")
-    # ================
-    root.print_ascii()
-    end_time = time.time()
-    time_taken = end_time - start_time
-
-    print(time_taken)
-
-    searchTime = time.time()
-    result = search([201711.0, 201711.0, 93.0, 93.0, 3.97, 3.97], root.members)
-    searchTimeEnd = time.time()
-    searchFinal = searchTimeEnd - searchTime
-
-    print("SEARCH TIME: ", searchFinal)
-
-    print("search results: ")
-    for item in result:
-        print(str(item.name), item.mbr, item.isgroup)
-        print(item.data)
-    saveCSV(result)
-if __name__ == "__main__":
-    main()

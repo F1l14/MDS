@@ -5,7 +5,7 @@ print("Select which Python file to run:")
 print("1. KD-Tree")
 print("2. Octree")
 print("3. Range Search")
-print("4. R-Tree")
+print("4. RTree")
 print("5. Exit")
 
 choice = input("Enter your choice: ")
