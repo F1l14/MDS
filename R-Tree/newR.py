@@ -14,10 +14,13 @@ def mapMonths(df):
     df["review_date"] = df["year"] + df["month_name"].map(month_mapping)
     return df
 
+csv_columns = None
 
 def parseCSV(path):
     df = pd.read_csv(path)
     df = mapMonths(df)
+    global csv_columns
+    csv_columns = df.columns
     for index, row in df.iterrows():
 
         # print(row["review_date"], row["rating"], row["100g_USD"])
@@ -28,6 +31,11 @@ def parseCSV(path):
                                      float(row["100g_USD"]), float(row["100g_USD"])], data=row)
         )
 
+def saveCSV(data):
+    results_df = pd.DataFrame(columns=csv_columns)
+    for item in data:
+        results_df = pd.concat([results_df, item.data.to_frame().T])
+    results_df.to_csv("output.csv", index=False)
 
 # ===========================================================================
 nodeCounter = 0
@@ -266,11 +274,11 @@ def main():
     searchFinal = searchTimeEnd - searchTime
 
     print("SEARCH TIME: ", searchFinal)
+
     print("search results: ")
     for item in result:
         print(str(item.name), item.mbr, item.isgroup)
         print(item.data)
-
-
+    saveCSV(result)
 if __name__ == "__main__":
     main()
