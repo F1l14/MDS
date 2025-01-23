@@ -2,9 +2,7 @@ import pandas as pd
 
 csv_columns = None
 
-def parseCSV(path):
-    df = pd.read_csv(path)
-    df = mapMonths(df)
+def build_r_tree(df):
     global csv_columns
     csv_columns = df.columns
     for index, row in df.iterrows():
@@ -22,7 +20,7 @@ def saveCSV(data):
     results_df = pd.DataFrame(columns=csv_columns)
     for item in data:
         results_df = pd.concat([results_df, item.data.to_frame().T])
-    results_df.to_csv("output.csv", index=False)
+    results_df.to_csv("archive/query_output.csv", index=False)
 
 
 # ===========================================================================
