@@ -19,12 +19,14 @@ def parseCSV(path):
     df = pd.read_csv(path)
     df = mapMonths(df)
     for index, row in df.iterrows():
-        if index < 50:
-            # print(row["review_date"], row["rating"], row["100g_USD"])
-            root.insert(
-                Node(isgroup=False, mbr=[float(row["review_date"]), float(row["review_date"]), float(row["rating"]),
-                                         float(row["rating"]),
-                                         float(row["100g_USD"]), float(row["100g_USD"])]))
+
+        # print(row["review_date"], row["rating"], row["100g_USD"])
+        # if index < 50:
+        root.insert(
+            Node(isgroup=False,members=None, mbr=[float(row["review_date"]), float(row["review_date"]), float(row["rating"]),
+                                     float(row["rating"]),
+                                     float(row["100g_USD"]), float(row["100g_USD"])], data=row)
+        )
 
 
 # ===========================================================================
@@ -35,7 +37,7 @@ def leastExpansionGroup(groupA, groupB, newMember):
     lEG = None
     leastExpansion = float('inf')
     for node in [groupA, groupB]:
-
+        node.calcSpace()
         tempNode = Node(isgroup=False, members=node.members + [newMember])
         tempNode.mbrCalc()
         tempNode.calcSpace()
@@ -44,12 +46,14 @@ def leastExpansionGroup(groupA, groupB, newMember):
         if expansion < leastExpansion:
             lEG = node
             leastExpansion = expansion
+    if(groupA.space !=0 and groupB.space ==0):
+        lEG = groupB
     return lEG
+
 
 def search(search_param, members):
     def containMbr(node_mbr, search_mbr, isgroup):
-        # print("search: ", search_mbr)
-        # print("current: ", node_mbr)
+
         if isgroup:
             #zero to four with step two
             for i in range(0, 6, 2):
@@ -63,25 +67,25 @@ def search(search_param, members):
 
             for i in range(0, 6, 2):
 
-                if not (search_mbr[i] <= node_mbr[i] and search_mbr[i+1] >= node_mbr[i+1]):
+                if not (search_mbr[i] <= node_mbr[i] and search_mbr[i + 1] >= node_mbr[i + 1]):
                     return False
 
                     # print("ok")
-            print(search_param, node_mbr)
+
             return True
 
     nodes = []
     for node in members:
-        # print("checking: ", node.name, search_param, node.mbr, node.isgroup)
+
         if node.isgroup:
             if containMbr(node.mbr, search_param, node.isgroup):
                 nodes += search(search_param, node.members)
         elif containMbr(node.mbr, search_param, node.isgroup):
             nodes.append(node)
-    # print("nodes: ", len(nodes))
-    # for node in nodes:
-    #     print(node.name)
+
     return nodes
+
+
 class Node:
     def __init__(self, isgroup=False, members=None, mbr=None, data=None):
         global nodeCounter
@@ -116,21 +120,22 @@ class Node:
 
     def mbrCalc(self):
         if self.isgroup:
-            if self.members:
-                # self.mbr = [float('inf'), float('-inf'), float('inf'), float('-inf'), float('inf'), float('-inf')]
-                if self.mbr is None:
-                    self.mbr = self.members[0].mbr[:]
+            # Ensure MBR starts with None or reset properly
+            if not self.members:
+                self.mbr = None
+                return
 
-                for member in self.members:
-                    for i in range(6):
-                        if i % 2 == 0:  # Min bounds
-                            try:
-                                self.mbr[i] = min(self.mbr[i], member.mbr[i])
-                            except AttributeError:
-                                print(self.name, self.mbr, self.members)
+            # Initialize MBR based on the first valid member
+            self.mbr = self.members[0].mbr[:]
 
-                        else:  # Max bounds
-                            self.mbr[i] = max(self.mbr[i], member.mbr[i])
+            for member in self.members:
+                if not member.mbr:
+                    raise ValueError(f"Member {member.name} does not have a valid MBR.")
+                for i in range(6):
+                    if i % 2 == 0:  # Min bounds
+                        self.mbr[i] = min(self.mbr[i], member.mbr[i])
+                    else:  # Max bounds
+                        self.mbr[i] = max(self.mbr[i], member.mbr[i])
 
     def calcSpace(self):
         if not self.mbr:
@@ -141,9 +146,6 @@ class Node:
             z = self.mbr[5] - self.mbr[4]
             self.space = x * y * z
 
-
-
-    # Update the insert method to fix group transformation logic
     def insert(self, newMember):
         if self.hasGroup:
             # Find the best child node to insert into
@@ -156,8 +158,6 @@ class Node:
                     break
                 current = nextnode
             # Insert into the chosen group
-            # print("self, current, next", self.name, current.name, nextnode.name)
-            # root.print_ascii()
             current.insert(newMember)
             self.mbrCalc()
         else:
@@ -171,20 +171,12 @@ class Node:
 
     def quadraticSplit(self):
         from itertools import combinations
-        # Fixed quadratic split logic
-        # print("==================================")
-        # self.print_ascii()
 
         def mbr_distance(mbr1, mbr2):
             x_dist = max(0, mbr1[0] - mbr2[1], mbr2[0] - mbr1[1])
             y_dist = max(0, mbr1[2] - mbr2[3], mbr2[2] - mbr1[3])
             z_dist = max(0, mbr1[4] - mbr2[5], mbr2[4] - mbr1[5])
             return x_dist + y_dist + z_dist
-
-        # print("============")
-        # for node in self.members:
-        #     print(node.name, node.mbr)
-        # print("============")
 
         pairs = list(combinations(self.members, 2))
         seedA, seedB = max(pairs, key=lambda pair: mbr_distance(pair[0].mbr, pair[1].mbr))
@@ -203,29 +195,40 @@ class Node:
         self.hasGroup = True
         self.members = [groupA, groupB]
         self.mbrCalc()
-        global root
+
+        # closest_to_A = min(remain, key=lambda node: mbr_distance(groupA.mbr, node.mbr))
+        #
+        # remain.remove(closest_to_A)
+        #
+        # groupA.insert(closest_to_A)
+        # groupB.insert(remain)
         for node in remain:
-            best = leastExpansionGroup(groupA, groupB, node)
-            best.insert(node)
-        # self.print_ascii()
-        # print("==================================")
-
-
-
+            group = leastExpansionGroup(groupA, groupB, node)
+            # print("GROUP")
+            group.insert(node)
 
 root = Node(isgroup=False)
 root.name = "root"
 
 
 def testdata():
-    A = Node(isgroup=False, mbr=[1, 1, 3, 3, 10, 10])
-    B = Node(isgroup=False, mbr=[2, 2, 4, 4, 1, 1])
-    C = Node(isgroup=False, mbr=[5, 5, 1, 1, 0, 0])
-    D = Node(isgroup=False, mbr=[6, 6, 1, 1, 2, 2])
-    E = Node(isgroup=False, mbr=[8, 8, 4, 4, 2, 2])
-    F = Node(isgroup=False, mbr=[2, 4, 5, 7, 0, 0])
-    G = Node(isgroup=False, mbr=[4, 6, 4, 6, 0, 0])
-    H = Node(isgroup=False, mbr=[5, 7, 5, 7, 0, 0])
+    # A = Node(isgroup=False, mbr=[1, 1, 3, 3, 10, 10])
+    # B = Node(isgroup=False, mbr=[2, 2, 4, 4, 1, 1])
+    # C = Node(isgroup=False, mbr=[5, 5, 1, 1, 0, 0])
+    # D = Node(isgroup=False, mbr=[6, 6, 1, 1, 2, 2])
+    # E = Node(isgroup=False, mbr=[8, 8, 4, 4, 2, 2])
+    # F = Node(isgroup=False, mbr=[2, 4, 5, 7, 0, 0])
+    # G = Node(isgroup=False, mbr=[4, 6, 4, 6, 0, 0])
+    # H = Node(isgroup=False, mbr=[5, 7, 5, 7, 0, 0])
+
+    A = Node(isgroup=False, mbr=[1, 1, 1, 1, 1, 1])  # Point at (1, 1, 1)
+    B = Node(isgroup=False, mbr=[2, 2, 2, 2, 2, 2])  # Point at (2, 2, 2)
+    C = Node(isgroup=False, mbr=[3, 3, 3, 3, 3, 3])  # Point at (3, 3, 3)
+    D = Node(isgroup=False, mbr=[4, 4, 4, 4, 4, 4])  # Point at (4, 4, 4)
+    E = Node(isgroup=False, mbr=[5, 5, 5, 5, 5, 5])  # Point at (5, 5, 5)
+    F = Node(isgroup=False, mbr=[6, 6, 6, 6, 6, 6])  # Point at (6, 6, 6)
+    G = Node(isgroup=False, mbr=[7, 7, 7, 7, 7, 7])  # Point at (7, 7, 7)
+    H = Node(isgroup=False, mbr=[8, 8, 8, 8, 8, 8])  # Point at (8, 8, 8)
 
     A.name = "A"
     B.name = "B"
@@ -239,9 +242,8 @@ def testdata():
     node_list = [A, B, C, D, E, F, G, H]
     for node in node_list:
         root.insert(node)
-        # print("INSERTING: ", node.name, node.mbr)
-        # root.print_ascii()
-        # print("========================================")
+        root.print_ascii()
+        print("=============================")
     root.insert(D)
 
 
@@ -250,22 +252,24 @@ def main():
 
     # ================
     # testdata()
-    parseCSV("coffee_analysis.csv")
+    parseCSV("simplified_coffee.csv")
     # ================
+    root.print_ascii()
     end_time = time.time()
     time_taken = end_time - start_time
-    root.print_ascii()
+
     print(time_taken)
 
     searchTime = time.time()
-    result = search([201711.0, 201711.0, 93.0, 93.0, 5.29, 5.29], root.members)
+    result = search([201711.0, 201711.0, 93.0, 93.0, 3.97, 3.97], root.members)
     searchTimeEnd = time.time()
-    searchFinal = searchTime - searchTimeEnd
+    searchFinal = searchTimeEnd - searchTime
 
     print("SEARCH TIME: ", searchFinal)
     print("search results: ")
     for item in result:
-        print(str(item.name) , item.mbr, item.isgroup)
+        print(str(item.name), item.mbr, item.isgroup)
+        print(item.data)
 
 
 if __name__ == "__main__":
