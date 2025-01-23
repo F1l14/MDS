@@ -20,8 +20,7 @@ elif choice == '3':
     os.system('python range_main.py')
 
 elif choice == '4':
-    # os.system('python r_tree_main.py')
-    print("Not yet implemented.")
+    os.system('python r_tree_main.py')
 
 elif choice == '5':
     print("Exiting program.")
