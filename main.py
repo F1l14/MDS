@@ -276,7 +276,7 @@ exact_similarity_list_raw = []
 
 # Jaccard Similarity for all reviews
 for i in range(doc_nr + 1):
-    for j in range(i + 1, doc_nr + 1):  # Αποφυγή επαναλήψεων, δουλεύουμε μόνο με i < j
+    for j in range(i + 1, doc_nr + 1):  # Reduce a few iteration loops i < j
         # split reviews
         set1 = set(dataset.iloc[i]['review'].lower().split())
         set2 = set(dataset.iloc[j]['review'].lower().split())
