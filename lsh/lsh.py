@@ -3,7 +3,7 @@ from random import randint, seed
 
 seed(1093460)
 
-user_defined_threshold = 0.25
+user_defined_threshold = 0.3
 
 class hashFamily:
     def __init__(self, i):
