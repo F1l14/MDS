@@ -3,11 +3,11 @@ import sys
 import pandas as pd
 import time
 import functions.functions as func
-import lsh.lsh as lsh
 import kd.kd as kd
 import octree.octree as octree
 import rangetree.rangetree as rangetree
 import RTree.r_tree as r_tree
+import lsh.lsh as lsh
 
 # Start the timer for loading
 start_time_load = time.time()
@@ -59,6 +59,7 @@ print("4. R-Tree")
 print("5. Exit")
 
 choice = input("Enter your choice: ")
+start_time = time.time()
 while choice not in ['1', '2', '3', '4', '5']:
     print("Invalid choice. Please select 1 - 5.")
     choice = input("Enter your choice: ")
@@ -98,6 +99,10 @@ elif choice == '5':
     sys.exit()
 else:
     print("Invalid choice. Please select 1 - 5.")
+
+end_time = time.time()
+elapsed_time = end_time - start_time
+print(f"Time taken for tree construction: {elapsed_time} seconds.\n")
 
 # QUERY PHASE
 run_query = input("Would you like to run the query phase? (no for exit): ")
@@ -172,6 +177,10 @@ elif choice == '3':
 elif choice == '4':
     results = tree.search([min_x, max_x, min_y, max_y, min_z, max_z], tree.root.members)
     tree.saveCSV(results)
+
+query_end_time = time.time()
+query_elapsed_time = query_end_time - query_start_time
+print(f"Time taken for range query: {query_elapsed_time} seconds.\n")
 
 # LSH PHASE OF THE QUERY
 
