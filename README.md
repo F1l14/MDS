@@ -18,6 +18,12 @@ Project: Implementation and Experimental Evaluation of Multidimensional Data Str
 [Report](https://upatrasgr-my.sharepoint.com/:w:/g/personal/up1093320_upatras_gr/Eegz3zUs1IJAug4rmj4QCmABn8NbnoZ1Bl6TiVGnB3Vb7w?e=Tx6xuL) <br>
 
 
+<h2>Σύνδεσμος για αναφορά σε Word</h2>
+
+[Report](https://upatrasgr-my.sharepoint.com/:w:/g/personal/up1093320_upatras_gr/Eegz3zUs1IJAug4rmj4QCmABn8NbnoZ1Bl6TiVGnB3Vb7w?e=Tx6xuL) <br>
+
+
+
 <h2>Ανάθεση</h2>
 Θεόφραστος: LSH<br>
 Βασίλης: K-d<br>
