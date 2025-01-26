@@ -99,7 +99,7 @@ class Octree:
 
         return result
 
-    # Helper method to check if two cubs overlap
+    # Helper method to check if two cubes overlap
     def overlaps(self, top_front_left, bot_back_right):
         return not (self.botBackRight.x < top_front_left.x or
                     self.topFrontLeft.x > bot_back_right.x or 
