@@ -2,6 +2,7 @@ import os
 import sys
 import pandas as pd
 import time
+
 import functions.functions as func
 import kd.kd as kd
 import octree.octree as octree
@@ -181,14 +182,12 @@ elif choice == '4':
 query_end_time = time.time()
 query_elapsed_time = query_end_time - query_start_time
 print(f"Time taken for range query: {query_elapsed_time} seconds.\n")
+print(f"Query results saved to archive/query_output.csv.\n")
 
 # LSH PHASE OF THE QUERY
 
 # Load the dataset
 dataset = pd.read_csv("archive/query_output.csv")
-
-# Delete the file
-# os.remove("archive/query_output.csv")
 
 run_lsh = input("Would you like to run the LSH phase of the query? (no for exit): ")
 if (run_lsh == "no"):
