@@ -189,53 +189,10 @@ class Node:
         self.members = [groupA, groupB]
         self.mbrCalc()
 
-        # closest_to_A = min(remain, key=lambda node: mbr_distance(groupA.mbr, node.mbr))
-        #
-        # remain.remove(closest_to_A)
-        #
-        # groupA.insert(closest_to_A)
-        # groupB.insert(remain)
         for node in remain:
             group = leastExpansionGroup(groupA, groupB, node)
-            # print("GROUP")
             group.insert(node)
 
 
 root = Node(isgroup=False)
 root.name = "root"
-
-
-def testdata():
-    # A = Node(isgroup=False, mbr=[1, 1, 3, 3, 10, 10])
-    # B = Node(isgroup=False, mbr=[2, 2, 4, 4, 1, 1])
-    # C = Node(isgroup=False, mbr=[5, 5, 1, 1, 0, 0])
-    # D = Node(isgroup=False, mbr=[6, 6, 1, 1, 2, 2])
-    # E = Node(isgroup=False, mbr=[8, 8, 4, 4, 2, 2])
-    # F = Node(isgroup=False, mbr=[2, 4, 5, 7, 0, 0])
-    # G = Node(isgroup=False, mbr=[4, 6, 4, 6, 0, 0])
-    # H = Node(isgroup=False, mbr=[5, 7, 5, 7, 0, 0])
-
-    A = Node(isgroup=False, mbr=[1, 1, 1, 1, 1, 1])  # Point at (1, 1, 1)
-    B = Node(isgroup=False, mbr=[2, 2, 2, 2, 2, 2])  # Point at (2, 2, 2)
-    C = Node(isgroup=False, mbr=[3, 3, 3, 3, 3, 3])  # Point at (3, 3, 3)
-    D = Node(isgroup=False, mbr=[4, 4, 4, 4, 4, 4])  # Point at (4, 4, 4)
-    E = Node(isgroup=False, mbr=[5, 5, 5, 5, 5, 5])  # Point at (5, 5, 5)
-    F = Node(isgroup=False, mbr=[6, 6, 6, 6, 6, 6])  # Point at (6, 6, 6)
-    G = Node(isgroup=False, mbr=[7, 7, 7, 7, 7, 7])  # Point at (7, 7, 7)
-    H = Node(isgroup=False, mbr=[8, 8, 8, 8, 8, 8])  # Point at (8, 8, 8)
-
-    A.name = "A"
-    B.name = "B"
-    C.name = "C"
-    D.name = "D"
-    E.name = "E"
-    F.name = "F"
-    G.name = "G"
-    H.name = "H"
-
-    node_list = [A, B, C, D, E, F, G, H]
-    for node in node_list:
-        root.insert(node)
-        root.print_ascii()
-        print("=============================")
-    root.insert(D)
