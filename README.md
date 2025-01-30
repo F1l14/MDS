@@ -1,10 +1,11 @@
-<h1>MDS</h1> 
+<h1>Multidimenaional Data Structures</h1> 
 
  
 
 <h2>Description</h2>
 Project: Implementation and Experimental Evaluation of Multidimensional Data Structures | CEID - 7th Semester <br>
-Εκφώνηση:https://eclass.upatras.gr/modules/document/file.php/CEID1162/Projects-2024-2025/Projects-kDDs-2024%28En%29-Final.pdf
+
+[Project Specifications](https://eclass.upatras.gr/modules/document/file.php/CEID1162/Projects-2024-2025/Projects-kDDs-2024%28En%29-Final.pdf)
 <br>
 <br>
 
@@ -17,21 +18,13 @@ Project: Implementation and Experimental Evaluation of Multidimensional Data Str
 
 [Report](https://upatrasgr-my.sharepoint.com/:w:/g/personal/up1093320_upatras_gr/Eegz3zUs1IJAug4rmj4QCmABn8NbnoZ1Bl6TiVGnB3Vb7w?e=Tx6xuL) <br>
 
-
-<h2>Ανάθεση</h2>
-Θεόφραστος: LSH<br>
-Βασίλης: K-d<br>
-Κωνσταντίνος: Quadtree<br>
-Μπάμπης: Range Tree<br>
-Φίλιππος: R-Tree<br>
-
 <h2>Languages and Utilities Used</h2>
 
 - <b>Python</b> 
 
 <br>
 <br>
-<h2>Optional Python Libraries</h2>
+<h2>Python Libraries</h2>
 
 - <b>pandas</b>
 Για χειρισμό δεδομένων, όπως φόρτωση, καθαρισμός, φιλτράρισμα και επεξεργασία πινάκων δεδομένων (DataFrames).
